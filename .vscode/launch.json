@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter Android TV Box (Chrome)",
+            "program": "lib/main.dart",
+            "deviceId": "chrome",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Flutter Android TV Box (M2006C3MG)",
+            "program": "lib/main.dart",
+            "deviceId": "172.16.88.88:5555",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Flutter Android TV Box (pendoox12)",
+            "program": "lib/main.dart",
+            "deviceId": "172.16.101.101:5555",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Flutter Android TV Box (pendoox12) [Release]",
+            "program": "lib/main.dart",
+            "deviceId": "172.16.101.101:5555",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--release"
+            ]
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-# flutter_android_tv_box
+# Imus TV App
 
 A new Flutter project.
 

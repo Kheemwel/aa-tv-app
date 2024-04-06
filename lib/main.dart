@@ -38,7 +38,9 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.grey[900],
           tabBarTheme: TabBarTheme(
             dividerColor: Colors.transparent,
+            dividerHeight: 0,
             indicator: BoxDecoration(color: Colors.green[900]),
+            labelPadding: EdgeInsets.zero, // remove default padding in tabs
             labelStyle: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
             unselectedLabelColor: Colors.white,

@@ -6,7 +6,23 @@
             "program": "lib/main.dart",
             "deviceId": "chrome",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": [
+                "--web-port",
+                "5050"
+            ]
+        },
+        {
+            "name": "Flutter Android TV Box (Chrome) [Release]",
+            "program": "lib/main.dart",
+            "deviceId": "chrome",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--release",
+                "--web-port",
+                "5050"
+            ]
         },
         {
             "name": "Flutter Android TV Box (M2006C3MG)",

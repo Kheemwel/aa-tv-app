@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/custom_widgets/focus_twinkling_border_button.dart';
 
 class VideosTab extends StatefulWidget {
   const VideosTab({super.key});
@@ -7,8 +8,7 @@ class VideosTab extends StatefulWidget {
   State<VideosTab> createState() => _VideosTabState();
 }
 
-class _VideosTabState extends State<VideosTab>
-    with TickerProviderStateMixin {
+class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
@@ -32,13 +32,13 @@ class _VideosTabState extends State<VideosTab>
           child: TabBar.secondary(
             controller: _tabController,
             tabs: const <Widget>[
-              Tab(text: 'Live TV'),
-              Tab(text: 'News'),
-              Tab(text: 'Politics'),
-              Tab(text: 'Education'),
-              Tab(text: 'Sports'),
-              Tab(text: 'Music & Arts'),
-              Tab(text: 'Business'),
+              FocusableSecondTab(text: 'Live TV'),
+              FocusableSecondTab(text: 'News'),
+              FocusableSecondTab(text: 'Politics'),
+              FocusableSecondTab(text: 'Education'),
+              FocusableSecondTab(text: 'Sports'),
+              FocusableSecondTab(text: 'Music & Arts'),
+              FocusableSecondTab(text: 'Business'),
             ],
           ),
         ),
@@ -58,5 +58,16 @@ class _VideosTabState extends State<VideosTab>
         ),
       ],
     );
+  }
+}
+
+class FocusableSecondTab extends StatelessWidget {
+  const FocusableSecondTab({super.key, required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return FocusTwinklingBorderContainer(child: Tab(text: text,));
   }
 }

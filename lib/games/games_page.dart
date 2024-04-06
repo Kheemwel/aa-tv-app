@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_android_tv_box/custom_widgets/focus_twinkling_border_button.dart';
 import 'package:flutter_android_tv_box/database/sqlite_notifications.dart';
 import 'package:intl/intl.dart';
 
@@ -187,15 +188,20 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
           ),
           // if (_selectedItem == '')
           if (true)
-            TextButton(
-              style: TextButton.styleFrom(
-                  fixedSize: const Size(100, 25), backgroundColor: Colors.blue),
-              onPressed: _handleSpin,
-              child: const Text(
-                'SPIN',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
+            FocusTwinklingBorderContainer(
+              isContentCentered: false,
+                autofocus: true,
+                child: TextButton(
+                  autofocus: true,
+                  style: TextButton.styleFrom(
+                      fixedSize: const Size(100, 25),
+                      backgroundColor: Colors.blue),
+                  onPressed: _handleSpin,
+                  child: const Text(
+                    'SPIN',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                )),
         ],
       ),
     );
@@ -203,7 +209,7 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
 
   @override
   void dispose() {
-    // _sqLiteNotification.dispose();
+    _sqLiteNotification.dispose();
     super.dispose();
   }
 }

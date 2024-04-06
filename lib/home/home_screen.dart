@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/custom_widgets/focus_twinkling_border_button.dart';
 import 'package:flutter_android_tv_box/home/announcements_tab.dart';
 import 'package:flutter_android_tv_box/home/events_tab.dart';
 import 'package:flutter_android_tv_box/home/menu_button.dart';
@@ -9,8 +10,9 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   final TabBar _tabBar = const TabBar.secondary(
+    indicatorPadding: EdgeInsets.zero,
     tabs: <Widget>[
-      CustomTab(text: 'Videos', icon: Icons.video_collection),
+      CustomTab(autofocus: true, text: 'Videos', icon: Icons.video_collection),
       CustomTab(text: 'Announcements', icon: Icons.notifications),
       CustomTab(text: 'Events', icon: Icons.event_note),
     ],
@@ -24,9 +26,11 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
             actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-              const SizedBox(width: 15,),
-              IconButton(
+              FocusTwinklingBorderContainer(child: IconButton(onPressed: () {}, icon: const Icon(Icons.search))),
+              const SizedBox(
+                width: 15,
+              ),
+              FocusTwinklingBorderContainer(child: IconButton(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -34,17 +38,22 @@ class HomeScreen extends StatelessWidget {
                           builder: (context) => const NotificationsPage()),
                     );
                   },
-                  icon: const Icon(Icons.notifications)),
-              const SizedBox(width: 15,),
-              const MenuButton(),
-              const SizedBox(width: 15,),
+                  icon: const Icon(Icons.notifications))),
+              const SizedBox(
+                width: 15,
+              ),
+              const FocusTwinklingBorderContainer(child: MenuButton()),
+              const SizedBox(
+                width: 15,
+              ),
             ],
             bottom: PreferredSize(
-                preferredSize: _tabBar.preferredSize,
-                child: ColoredBox(
-                  color: Color(Colors.grey[800]!.value),
-                  child: _tabBar,
-                ))),
+              preferredSize: _tabBar.preferredSize,
+              child: ColoredBox(
+                color: Color(Colors.grey[800]!.value),
+                child: _tabBar,
+              ),
+            )),
         body: const TabBarView(
           children: <Widget>[
             VideosTab(),
@@ -57,28 +66,31 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-
 class CustomTab extends StatelessWidget {
-  const CustomTab({super.key, required this.text, required this.icon});
+  const CustomTab({super.key, this.autofocus = false, required this.text, required this.icon});
 
   final String text;
   final IconData icon;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Tab(
+    return FocusTwinklingBorderContainer(
+      autofocus: autofocus,
+      child: Tab(
         child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          color: Colors.blue,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Colors.blue,
+            ),
+            const SizedBox(width: 10),
+            Text(text),
+          ],
         ),
-        const SizedBox(width: 10),
-        Text(text),
-      ],
-    ));
+      ),
+    );
   }
 }

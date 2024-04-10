@@ -24,7 +24,7 @@ class _SettingsPage extends State<SettingsPage> {
           children: [
             ListTile(
               focusColor: Colors.green[900],
-              tileColor: Colors.grey,
+              tileColor: Colors.transparent,
               textColor: Colors.white,
               title: const Text(
                 'Auto Delete Notifications',

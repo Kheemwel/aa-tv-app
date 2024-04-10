@@ -9,16 +9,15 @@ import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 
 import 'package:http/http.dart' as http;
 
-const String TOKEN = 'e94061b3-bc9f-489d-99ce-ef9e8c9058ce';
-
 Future<http.Response> saveGameData(
     String userName, String prize, String dateTime) async {
+  const String token = 'e94061b3-bc9f-489d-99ce-ef9e8c9058ce';
   final response = await http.post(
-      Uri.parse('https://properly-immune-cattle.ngrok-free.app/api/save-data'),
+      Uri.parse('https://android-tv.loca.lt/api/save-data'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': "Bearer $TOKEN",
+        'Authorization': "Bearer $token",
       },
       body: jsonEncode(<String, String>{
         'user_name': userName,
@@ -92,7 +91,8 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
       });
 
       String dateTime = getCurrentDateTime();
-      var response = await saveGameData('Kim', _selectedItem, dateTime);
+      http.Response response =
+          await saveGameData('Kim', _selectedItem, dateTime);
       _sqLiteNotification.insertNotification('Congratulations! 🥳',
           'You won $_selectedItem of internet speed.', dateTime);
 
@@ -189,7 +189,7 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
           // if (_selectedItem == '')
           if (true)
             FocusTwinklingBorderContainer(
-              isContentCentered: false,
+                isContentCentered: false,
                 autofocus: true,
                 child: TextButton(
                   autofocus: true,

@@ -90,11 +90,16 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
                   focusColor: Colors.green[900],
                   tileColor: Colors.grey[800],
                   textColor: Colors.white,
-                  title: Text(announcement.title),
+                  title: Text(
+                    announcement.title,
+                    style: const TextStyle(fontSize: 20),
+                  ),
                   subtitle: SizedBox(
                     height: 100,
                     child: Text(
-                        overflow: TextOverflow.ellipsis, announcement.message),
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                        announcement.message),
                   ),
                   trailing: Text(announcement.getFormattedDate()),
                   onTap: () => _viewAnnouncement(context, announcement.message),
@@ -122,9 +127,11 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
               child: Container(
                 alignment: Alignment.center,
                 color: Colors.grey[900],
-                child: Text(
-                  message,
-                  style: const TextStyle(fontSize: 20),
+                child: SingleChildScrollView(
+                  child: Text(
+                    message,
+                    style: const TextStyle(fontSize: 20),
+                  ),
                 ),
               )),
           Expanded(

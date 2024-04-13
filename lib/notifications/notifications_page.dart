@@ -22,7 +22,7 @@ class _NotificationPageState extends State<NotificationsPage> {
   Future<void> _loadNotifications() async {
     final notifications = await _sqLiteNotification.queryNotifications();
     setState(() {
-      _notifications = notifications;
+      _notifications = notifications.reversed.toList();
     });
   }
 
@@ -50,6 +50,7 @@ class _NotificationPageState extends State<NotificationsPage> {
         body: Center(
             child: _notifications.isNotEmpty
                 ? ListView.separated(
+                    // reverse: true,
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(
                         vertical: 25, horizontal: 50),
@@ -61,7 +62,8 @@ class _NotificationPageState extends State<NotificationsPage> {
                     itemBuilder: (BuildContext context, int index) =>
                         NotificationItem(
                             notification: _notifications[index],
-                            onDelete: () => _deleteNotification(_notifications[index].id)))
+                            onDelete: () =>
+                                _deleteNotification(_notifications[index].id)))
                 : const CircularProgressIndicator()));
   }
 

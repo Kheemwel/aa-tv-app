@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/custom_widgets/focus_twinkling_border_button.dart';
+import 'package:flutter_android_tv_box/home/videos.dart';
 
 class VideosTab extends StatefulWidget {
   const VideosTab({super.key});
@@ -46,7 +47,8 @@ class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
           child: TabBarView(
             controller: _tabController,
             children: const <Widget>[
-              Center(child: Text('Live TV tab')),
+              // Center(child: Text('Live TV tab')),
+              Videos(),
               Center(child: Text('News tab')),
               Center(child: Text('Politics tab')),
               Center(child: Text('Education tab')),

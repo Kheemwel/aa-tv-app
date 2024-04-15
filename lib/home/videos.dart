@@ -32,6 +32,7 @@ class Video {
   final String description;
   final String thumbnail;
   final String video;
+  final String category;
   final DateTime createdAt;
 
   Video({
@@ -40,6 +41,7 @@ class Video {
     required this.description,
     required this.thumbnail,
     required this.video,
+    required this.category,
     required this.createdAt,
   });
 
@@ -50,6 +52,7 @@ class Video {
       description: json['description'] as String,
       thumbnail: json['thumbnail'] as String,
       video: json['video'] as String,
+      category: json['category'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -60,7 +63,8 @@ class Video {
 }
 
 class Videos extends StatefulWidget {
-  const Videos({super.key});
+  final String category;
+  const Videos({super.key, required this.category});
 
   @override
   State<Videos> createState() => _VideosState();
@@ -68,6 +72,7 @@ class Videos extends StatefulWidget {
 
 class _VideosState extends State<Videos> {
   late List<Video> _videos = [];
+  bool _isContentEmpty = false;
 
   @override
   void initState() {
@@ -79,19 +84,30 @@ class _VideosState extends State<Videos> {
     try {
       final videos = await getVideos();
       setState(() {
-        _videos = videos;
+        _videos = videos.where((element) => element.category == widget.category).toList();
+        _isContentEmpty = _videos.isEmpty;
       });
     } catch (error) {
       print('Error: $error');
       // Handle error
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: _videos.isNotEmpty
-          ? ListView.separated(
+      child: _content()
+    );
+  }
+
+  Widget _content() {
+    if (_videos.isEmpty && _isContentEmpty) {
+       return const Text('No Content');
+    }
+
+    if (_videos.isNotEmpty) {
+      return ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
               itemBuilder: (BuildContext context, int index) {
                 final video = _videos[index];
@@ -128,9 +144,10 @@ class _VideosState extends State<Videos> {
                   height: 10,
                 );
               },
-              itemCount: _videos.length)
-          : const CircularProgressIndicator(),
-    );
+              itemCount: _videos.length);
+    }
+
+    return const CircularProgressIndicator();
   }
 
   void _viewVideo(BuildContext context, String videoBase64) async {

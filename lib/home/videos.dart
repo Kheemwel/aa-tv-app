@@ -1,12 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
-import 'package:path_provider/path_provider.dart';
 
 Future<List<Video>> getVideos() async {
   final Uri url = Uri.parse('https://android-tv.loca.lt/api/get-videos');
@@ -30,18 +28,18 @@ class Video {
   final int id;
   final String title;
   final String description;
-  final String thumbnail;
-  final String video;
   final String category;
+  final String thumbnailPath;
+  final String videoPath;
   final DateTime createdAt;
 
   Video({
     required this.id,
     required this.title,
     required this.description,
-    required this.thumbnail,
-    required this.video,
     required this.category,
+    required this.thumbnailPath,
+    required this.videoPath,
     required this.createdAt,
   });
 
@@ -50,9 +48,9 @@ class Video {
       id: json['id'] as int,
       title: json['title'] as String,
       description: json['description'] as String,
-      thumbnail: json['thumbnail'] as String,
-      video: json['video'] as String,
       category: json['category'] as String,
+      thumbnailPath: json['thumbnail_path'] as String,
+      videoPath: json['video_path'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -84,7 +82,9 @@ class _VideosState extends State<Videos> {
     try {
       final videos = await getVideos();
       setState(() {
-        _videos = videos.where((element) => element.category == widget.category).toList();
+        _videos = videos
+            .where((element) => element.category != widget.category)
+            .toList();
         _isContentEmpty = _videos.isEmpty;
       });
     } catch (error) {
@@ -92,75 +92,68 @@ class _VideosState extends State<Videos> {
       // Handle error
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: _content()
-    );
+    return Center(child: _content());
   }
 
   Widget _content() {
     if (_videos.isEmpty && _isContentEmpty) {
-       return const Text('No Content');
+      return const Text('No Content');
     }
 
     if (_videos.isNotEmpty) {
       return ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
-              itemBuilder: (BuildContext context, int index) {
-                final video = _videos[index];
-                return ListTile(
-                  focusColor: Colors.green[900],
-                  tileColor: Colors.grey[800],
-                  textColor: Colors.white,
-                  title: Text(video.title, style: const TextStyle(fontSize: 20),),
-                  subtitle: SizedBox(
-                    height: 250,
-                    child: Row(
-                      children: [
-                        Image.memory(
-                          base64Decode(video.thumbnail.split(',').last),
-                          width: 250,
-                        ),
-                        const SizedBox(
-                          width: 100,
-                        ),
-                        Expanded(
-                            child: Text(
-                                maxLines: 5,
-                                overflow: TextOverflow.ellipsis,
-                                video.description)),
-                      ],
+          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
+          itemBuilder: (BuildContext context, int index) {
+            final video = _videos[index];
+            print(video.thumbnailPath);
+            return ListTile(
+              focusColor: Colors.green[900],
+              tileColor: Colors.grey[800],
+              textColor: Colors.white,
+              title: Text(
+                video.title,
+                style: const TextStyle(fontSize: 20),
+              ),
+              subtitle: SizedBox(
+                height: 250,
+                child: Row(
+                  children: [
+                    Image.network(video.thumbnailPath),
+                    const SizedBox(
+                      width: 100,
                     ),
-                  ),
-                  trailing: Text(video.getFormattedDate()),
-                  onTap: () => _viewVideo(context, video.video),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  height: 10,
-                );
-              },
-              itemCount: _videos.length);
+                    Expanded(
+                        child: Text(
+                            maxLines: 5,
+                            overflow: TextOverflow.ellipsis,
+                            video.description)),
+                  ],
+                ),
+              ),
+              trailing: Text(video.getFormattedDate()),
+              onTap: () => _viewVideo(context, video.videoPath),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              height: 10,
+            );
+          },
+          itemCount: _videos.length);
     }
 
     return const CircularProgressIndicator();
   }
 
-  void _viewVideo(BuildContext context, String videoBase64) async {
-    // Decode the base64 string to bytes
-    final videoBytes = base64Decode(videoBase64.split(',').last);
-
-    // Get the temporary directory and create a temporary file
-    final tempDir = await getTemporaryDirectory();
-    final tempFile =
-        await File('${tempDir.path}/temp_video.mp4').writeAsBytes(videoBytes);
-
-    // Create a VideoPlayerController from the temporary file
-    final videoController = VideoPlayerController.file(tempFile);
+  void _viewVideo(BuildContext context, String videoLink) async {
+    final videoController = VideoPlayerController.networkUrl(
+      Uri.parse(
+        videoLink,
+      ),
+    );
 
     showDialog(
       context: context,

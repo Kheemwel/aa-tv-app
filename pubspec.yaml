@@ -42,6 +42,7 @@ dependencies:
   path: ^1.9.0
   video_player: ^2.8.5
   path_provider: ^2.1.2
+  chewie: ^1.8.1
 
 dev_dependencies:
   flutter_test:

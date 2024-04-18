@@ -25,9 +25,16 @@
             ]
         },
         {
-            "name": "Flutter Android TV Box (M2006C3MG)",
+            "name": "Flutter Android TV Box (M2006C3MG) <City Hall>",
             "program": "lib/main.dart",
             "deviceId": "172.16.88.88:5555",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Flutter Android TV Box (M2006C3MG) <Home>",
+            "program": "lib/main.dart",
+            "deviceId": "192.168.1.33:5555",
             "request": "launch",
             "type": "dart"
         },

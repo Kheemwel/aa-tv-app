@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 
 Future<List<Video>> getVideos() async {
   final Uri url = Uri.parse('https://android-tv.loca.lt/api/get-videos');
@@ -83,13 +84,12 @@ class _VideosState extends State<Videos> {
       final videos = await getVideos();
       setState(() {
         _videos = videos
-            .where((element) => element.category != widget.category)
+            .where((element) => element.category == widget.category)
             .toList();
         _isContentEmpty = _videos.isEmpty;
       });
     } catch (error) {
       print('Error: $error');
-      // Handle error
     }
   }
 
@@ -108,7 +108,6 @@ class _VideosState extends State<Videos> {
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
           itemBuilder: (BuildContext context, int index) {
             final video = _videos[index];
-            print(video.thumbnailPath);
             return ListTile(
               focusColor: Colors.green[900],
               tileColor: Colors.grey[800],
@@ -121,7 +120,18 @@ class _VideosState extends State<Videos> {
                 height: 250,
                 child: Row(
                   children: [
-                    Image.network(video.thumbnailPath),
+                    Image.network(video.thumbnailPath, frameBuilder:
+                        (context, child, frame, wasSynchronouslyLoaded) {
+                      return child;
+                    }, loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
                     const SizedBox(
                       width: 100,
                     ),
@@ -155,37 +165,25 @@ class _VideosState extends State<Videos> {
       ),
     );
 
+    await videoController.initialize();
+
+    final chewieController = ChewieController(
+      videoPlayerController: videoController,
+      autoPlay: true,
+      looping: true,
+      materialProgressColors: ChewieProgressColors(playedColor: Colors.green, bufferedColor: Color(Colors.green[900]!.value)),
+      fullScreenByDefault: true,
+    );
+
+    final playerWidget = Chewie(
+      controller: chewieController,
+    );
+
     showDialog(
       context: context,
       builder: (context) => Dialog.fullscreen(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 3,
-              child: VideoPlayer(videoController),
-            ),
-            Expanded(
-                child: Center(
-              child: TextButton(
-                autofocus: true,
-                onPressed: () {
-                  Navigator.pop(context);
-                }, // Implement clear logic
-                child: const Text(
-                  'Back',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ))
-          ],
-        ),
+        child: playerWidget
       ),
     );
-
-    // Start playing the video when the dialog is shown
-    videoController.initialize().then((_) {
-      videoController.play();
-    });
   }
 }

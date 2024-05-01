@@ -59,6 +59,7 @@ class AnnouncementsTab extends StatefulWidget {
 
 class _AnnouncementsTabState extends State<AnnouncementsTab> {
   late List<Announcement> _announcements = [];
+  bool _isContentEmpty = false;
 
   @override
   void initState() {
@@ -71,6 +72,7 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
       final announcements = await getAnnouncements();
       setState(() {
         _announcements = announcements;
+        _isContentEmpty = _announcements.isEmpty;
       });
     } catch (error) {
       print('Error: $error');
@@ -80,39 +82,47 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: _announcements.isNotEmpty
-          ? ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
-              itemBuilder: (BuildContext context, int index) {
-                final announcement = _announcements[index];
-                return ListTile(
-                  focusColor: Colors.green[900],
-                  tileColor: Colors.grey[800],
-                  textColor: Colors.white,
-                  title: Text(
-                    announcement.title,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  subtitle: SizedBox(
-                    height: 100,
-                    child: Text(
-                        maxLines: 5,
-                        overflow: TextOverflow.ellipsis,
-                        announcement.message),
-                  ),
-                  trailing: Text(announcement.getFormattedDate()),
-                  onTap: () => _viewAnnouncement(context, announcement.message),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  height: 10,
-                );
-              },
-              itemCount: _announcements.length)
-          : const CircularProgressIndicator(),
-    );
+    return Center(child: _content());
+  }
+
+  Widget _content() {
+    if (_announcements.isEmpty && _isContentEmpty) {
+      return const Text('No Content');
+    }
+
+    if (_announcements.isNotEmpty) {
+      return ListView.separated(
+          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
+          itemBuilder: (BuildContext context, int index) {
+            final announcement = _announcements[index];
+            return ListTile(
+              focusColor: Colors.green[900],
+              tileColor: Colors.grey[800],
+              textColor: Colors.white,
+              title: Text(
+                announcement.title,
+                style: const TextStyle(fontSize: 20),
+              ),
+              subtitle: SizedBox(
+                height: 100,
+                child: Text(
+                    maxLines: 5,
+                    overflow: TextOverflow.ellipsis,
+                    announcement.message),
+              ),
+              trailing: Text(announcement.getFormattedDate()),
+              onTap: () => _viewAnnouncement(context, announcement.message),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              height: 10,
+            );
+          },
+          itemCount: _announcements.length);
+    }
+
+    return const CircularProgressIndicator();
   }
 
   void _viewAnnouncement(BuildContext context, String message) {

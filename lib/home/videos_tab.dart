@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_android_tv_box/custom_widgets/focus_twinkling_border_button.dart';
 import 'package:flutter_android_tv_box/home/videos.dart';
 import 'package:http/http.dart' as http;
 
@@ -82,13 +81,14 @@ class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
         ? const Center(child: CircularProgressIndicator())
         : Column(
             children: <Widget>[
-              ColoredBox(
-                color: Color(Colors.grey[800]!.value),
+              Container(
+                padding: const EdgeInsets.all(5),
+                color: Colors.grey[800],
                 child: TabBar.secondary(
                     controller: _tabController,
                     tabs: List.generate(
                         _categories.length,
-                        (index) => FocusableSecondTab(
+                        (index) => Tab(
                             text: _categories[index].category))),
               ),
               Expanded(
@@ -101,19 +101,5 @@ class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
               ),
             ],
           );
-  }
-}
-
-class FocusableSecondTab extends StatelessWidget {
-  const FocusableSecondTab({super.key, required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return FocusTwinklingBorderContainer(
-        child: Tab(
-      text: text,
-    ));
   }
 }

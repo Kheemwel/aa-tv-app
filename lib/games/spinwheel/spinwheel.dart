@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_android_tv_box/custom_widgets/focus_twinkling_border_button.dart';
+import 'package:flutter_android_tv_box/custom_widgets/focus_border.dart';
 import 'package:flutter_android_tv_box/database/sqlite_notifications.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'package:http/http.dart' as http;
@@ -174,8 +174,7 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
           ),
           // if (_selectedItem == '')
           if (true)
-            FocusTwinklingBorderContainer(
-                isContentCentered: false,
+            FocusBorder(
                 autofocus: true,
                 child: TextButton(
                   autofocus: true,

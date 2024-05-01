@@ -5,15 +5,6 @@ void main() {
   runApp(const MyApp());
 }
 
-final Map<String, dynamic> PALETTE = {
-  'primary': Colors.blue,
-  'secondary': Colors.green[900],
-  'tertiary': Colors.green[800],
-  'primary-background': Colors.grey[900],
-  'secondary-background': Colors.grey[800],
-  'text-dark': Colors.grey[300],
-};
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -39,7 +30,7 @@ class MyApp extends StatelessWidget {
           tabBarTheme: TabBarTheme(
             dividerColor: Colors.transparent,
             dividerHeight: 0,
-            indicator: BoxDecoration(color: Colors.green[900]),
+            indicator: BoxDecoration(color: Colors.green[900], borderRadius: const BorderRadius.all(Radius.circular(10))),
             labelPadding: EdgeInsets.zero, // remove default padding in tabs
             labelStyle: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),

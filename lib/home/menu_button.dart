@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/about/about_page.dart';
-import 'package:flutter_android_tv_box/custom_widgets/focus_twinkling_border_button.dart';
+import 'package:flutter_android_tv_box/custom_widgets/focus_border.dart';
 import 'package:flutter_android_tv_box/games/games_page.dart';
 import 'package:flutter_android_tv_box/settings/settings_page.dart';
 
@@ -31,19 +31,19 @@ class _MenuButton extends State<MenuButton> {
           );
         },
         menuChildren: [
-          FocusTwinklingBorderContainer(
+          FocusBorder(
               child: buildMenuItemButton(
                   context: context,
                   text: 'Games',
                   icon: Icons.games,
                   page: const GamesPage())),
-          FocusTwinklingBorderContainer(
+          FocusBorder(
               child: buildMenuItemButton(
                   context: context,
                   text: 'Settings',
                   icon: Icons.settings,
                   page: const SettingsPage())),
-          FocusTwinklingBorderContainer(
+          FocusBorder(
               child: buildMenuItemButton(
                   context: context,
                   text: 'About',

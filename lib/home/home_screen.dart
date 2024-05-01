@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_android_tv_box/custom_widgets/focus_twinkling_border_button.dart';
+import 'package:flutter_android_tv_box/custom_widgets/focus_border.dart';
 import 'package:flutter_android_tv_box/home/announcements_tab.dart';
 import 'package:flutter_android_tv_box/home/events_tab.dart';
 import 'package:flutter_android_tv_box/home/menu_button.dart';
@@ -26,11 +26,11 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
             actions: [
-              FocusTwinklingBorderContainer(child: IconButton(onPressed: () {}, icon: const Icon(Icons.search))),
+              FocusBorder(child: IconButton(onPressed: () {}, icon: const Icon(Icons.search))),
               const SizedBox(
                 width: 15,
               ),
-              FocusTwinklingBorderContainer(child: IconButton(
+              FocusBorder(child: IconButton(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -42,15 +42,16 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 width: 15,
               ),
-              const FocusTwinklingBorderContainer(child: MenuButton()),
+              FocusBorder(child: const MenuButton()),
               const SizedBox(
                 width: 15,
               ),
             ],
             bottom: PreferredSize(
               preferredSize: _tabBar.preferredSize,
-              child: ColoredBox(
-                color: Color(Colors.grey[800]!.value),
+              child: Container(
+                color: Colors.grey[800],
+                padding: const EdgeInsets.all(5),
                 child: _tabBar,
               ),
             )),
@@ -75,9 +76,7 @@ class CustomTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FocusTwinklingBorderContainer(
-      autofocus: autofocus,
-      child: Tab(
+    return Tab(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,7 +89,6 @@ class CustomTab extends StatelessWidget {
             Text(text),
           ],
         ),
-      ),
     );
   }
 }

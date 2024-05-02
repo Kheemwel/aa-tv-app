@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -91,74 +93,97 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
     }
 
     if (_announcements.isNotEmpty) {
-      return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
-          itemBuilder: (BuildContext context, int index) {
-            final announcement = _announcements[index];
-            return ListTile(
-              focusColor: Colors.green[900],
-              tileColor: Colors.grey[800],
-              textColor: Colors.white,
-              title: Text(
-                announcement.title,
-                style: const TextStyle(fontSize: 20),
-              ),
-              subtitle: SizedBox(
-                height: 100,
-                child: Text(
-                    maxLines: 5,
+      return GridView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, mainAxisSpacing: 10, crossAxisSpacing: 10),
+        itemCount: _announcements.length,
+        itemBuilder: (context, index) {
+          final announcement = _announcements[index];
+          return ListTile(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            focusColor: Colors.green[900],
+            tileColor: Colors.grey[800],
+            textColor: Colors.white,
+            title: SizedBox(
+              height: 75,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    announcement.title,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    announcement.message),
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    announcement.getFormattedDate(),
+                    style: TextStyle(color: Colors.grey[300], fontSize: 12),
+                  ),
+                ],
               ),
-              trailing: Text(announcement.getFormattedDate()),
-              onTap: () => _viewAnnouncement(context, announcement.message),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 10,
-            );
-          },
-          itemCount: _announcements.length);
+            ),
+            subtitle: Text(
+                maxLines: 10,
+                overflow: TextOverflow.ellipsis,
+                announcement.message),
+            onTap: () => _viewAnnouncement(
+                context, announcement.title, announcement.message),
+          );
+        },
+      );
     }
 
     return const CircularProgressIndicator();
   }
 
-  void _viewAnnouncement(BuildContext context, String message) {
+  void _viewAnnouncement(BuildContext context, String title, String message) {
     showDialog(
       context: context,
       builder: (context) => Dialog.fullscreen(
-          child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-              flex: 3,
-              child: Container(
-                alignment: Alignment.center,
-                color: Colors.grey[900],
-                child: SingleChildScrollView(
-                  child: Text(
-                    message,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ),
-              )),
-          Expanded(
-              child: Center(
-            child: TextButton(
-              autofocus: true,
-              onPressed: () {
-                Navigator.pop(context);
-              }, // Implement clear logic
-              child: const Text(
-                'Back',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+        child: Row(
+          children: [
+            Expanded(
+                child: Container(
+              padding: const EdgeInsets.all(20),
+              color: Colors.grey[900],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(title, style: const TextStyle(fontSize: 20)),
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          message,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            ),
-          ))
-        ],
-      )),
+            )),
+            SizedBox(
+                width: 100,
+                child: Center(
+                  child: TextButton(
+                    autofocus: true,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }, // Implement clear logic
+                    child: const Text(
+                      'Back',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ))
+          ],
+        ),
+      ),
     );
   }
 }

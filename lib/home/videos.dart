@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -108,43 +109,13 @@ class _VideosState extends State<Videos> {
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
           itemBuilder: (BuildContext context, int index) {
             final video = _videos[index];
-            return ListTile(
-              focusColor: Colors.green[900],
-              tileColor: Colors.grey[800],
-              textColor: Colors.white,
-              title: Text(
-                video.title,
-                style: const TextStyle(fontSize: 20),
-              ),
-              subtitle: SizedBox(
-                height: 250,
-                child: Row(
-                  children: [
-                    Image.network(video.thumbnailPath, frameBuilder:
-                        (context, child, frame, wasSynchronouslyLoaded) {
-                      return child;
-                    }, loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
-                    const SizedBox(
-                      width: 100,
-                    ),
-                    Expanded(
-                        child: Text(
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
-                            video.description)),
-                  ],
-                ),
-              ),
-              trailing: Text(video.getFormattedDate()),
-              onTap: () => _viewVideo(context, video.videoPath),
+
+            return VideoTile(
+              title: video.title,
+              date: video.getFormattedDate(),
+              description: video.description,
+              thumbnail: video.thumbnailPath,
+              ontap: () => _viewVideo(context, video.videoPath),
             );
           },
           separatorBuilder: (BuildContext context, int index) {
@@ -171,7 +142,9 @@ class _VideosState extends State<Videos> {
       videoPlayerController: videoController,
       autoPlay: true,
       looping: true,
-      materialProgressColors: ChewieProgressColors(playedColor: Colors.green, bufferedColor: Color(Colors.green[900]!.value)),
+      materialProgressColors: ChewieProgressColors(
+          playedColor: Colors.green,
+          bufferedColor: Color(Colors.green[900]!.value)),
       fullScreenByDefault: true,
     );
 
@@ -181,8 +154,116 @@ class _VideosState extends State<Videos> {
 
     showDialog(
       context: context,
-      builder: (context) => Dialog.fullscreen(
-        child: playerWidget
+      builder: (context) => Dialog.fullscreen(child: playerWidget),
+    );
+  }
+}
+
+class VideoTile extends StatefulWidget {
+  final String title;
+  final String date;
+  final String description;
+  final String thumbnail;
+  final VoidCallback ontap;
+
+  const VideoTile({
+    super.key,
+    required this.title,
+    required this.date,
+    required this.description,
+    required this.thumbnail,
+    required this.ontap,
+  });
+
+  @override
+  State<VideoTile> createState() => _VideoTileState();
+}
+
+class _VideoTileState extends State<VideoTile> {
+  Color? backgroundColor;
+
+  @override
+  void initState() {
+    super.initState();
+    backgroundColor = Colors.grey[800];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      onFocusChange: (value) {
+        setState(() {
+          backgroundColor = value ? Colors.green[900] : Colors.grey[800];
+        });
+      },
+      child: GestureDetector(
+        onTap: widget.ontap,
+        child: Container(
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 400,
+                height: 300,
+                alignment: Alignment.center,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    widget.thumbnail,
+                    width: 400,
+                    height: 300,
+                    fit: BoxFit.cover,
+                    frameBuilder:
+                        (context, child, frame, wasSynchronouslyLoaded) {
+                      return child;
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      widget.date,
+                      style: TextStyle(color: Colors.grey[300]),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      widget.description,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

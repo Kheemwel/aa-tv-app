@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/config.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -16,7 +17,7 @@ class AboutPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'App Name: Imus App',
+                'App Name: $appName',
                 style: TextStyle(fontSize: 18),
               ),
               SizedBox(
@@ -41,15 +42,7 @@ class AboutPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'Lorem Ipsum Dolor',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Lorem Ipsum Dolor',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Lorem Ipsum Dolor',
+                      'Programmer: Kimwel Lourence C. Beller',
                       style: TextStyle(fontSize: 16),
                     ),
                   ],

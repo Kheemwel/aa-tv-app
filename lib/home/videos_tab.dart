@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/custom_widgets/focus_border.dart';
 import 'package:flutter_android_tv_box/home/videos.dart';
 import 'package:http/http.dart' as http;
 
@@ -83,13 +84,16 @@ class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.all(5),
-                color: Colors.grey[800],
+                color: Colors.grey[800]!.withOpacity(0.5),
                 child: TabBar.secondary(
                     controller: _tabController,
+                    indicatorWeight: 0.01,
                     tabs: List.generate(
                         _categories.length,
-                        (index) => Tab(
-                            text: _categories[index].category))),
+                        (index) => FocusBorder(
+                          child: Tab(
+                              text: _categories[index].category),
+                        ))),
               ),
               Expanded(
                 child: TabBarView(

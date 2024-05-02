@@ -24,6 +24,7 @@ class _FocusBorderState extends State<FocusBorder> {
         });
       },
       child: Container(
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           border: Border.all(
             color: _hasFocus ? Color(Colors.green[800]!.value) : Colors.transparent,

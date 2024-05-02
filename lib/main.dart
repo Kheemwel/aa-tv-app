@@ -30,10 +30,11 @@ class MyApp extends StatelessWidget {
           tabBarTheme: TabBarTheme(
             dividerColor: Colors.transparent,
             dividerHeight: 0,
-            indicator: BoxDecoration(color: Colors.green[900], borderRadius: const BorderRadius.all(Radius.circular(10))),
+            indicator: BoxDecoration(
+                color: Colors.green[900],
+                borderRadius: const BorderRadius.all(Radius.circular(10))),
             labelPadding: EdgeInsets.zero, // remove default padding in tabs
-            labelStyle: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+            labelStyle: const TextStyle(color: Colors.white, fontSize: 18),
             unselectedLabelColor: Colors.white,
           ),
           menuTheme: MenuThemeData(
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
                   const TextStyle(fontSize: 18, color: Colors.white),
               surfaceTintColor: Colors.transparent,
               backgroundColor: Colors.grey[800]),
+          drawerTheme: DrawerThemeData(
+              backgroundColor: Colors.grey[800],
+              surfaceTintColor: Colors.transparent),
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),

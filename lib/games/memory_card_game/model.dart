@@ -16,8 +16,8 @@ const List<String> cards = [
 ];
 
 /// Duplicate the cards for matching and shuffle it
-List<String> multipliedCards({int multiplier = 1}) {
-  int multi = max(1, multiplier) * 2;
+List<String> multipliedCards({int multiplier = 4}) {
+  int multi = max(4, multiplier) * 2;
   List<String> multiCards = [];
   for (var card in cards) {
     for (var i = 0; i < multi; i++) {

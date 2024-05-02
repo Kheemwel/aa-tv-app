@@ -14,7 +14,7 @@ class MemoryCardGame extends StatefulWidget {
 class _MemoryCardGameState extends State<MemoryCardGame> {
   int time = 0;
   late Timer timer;
-  List<String> items = multipliedCards(multiplier: 1);
+  List<String> items = multipliedCards();
   List<int> matchCards = [];
   List<int> selectedCards = [];
   late List<MemoryCard> cards = List.generate(
@@ -65,22 +65,17 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
         ),
         SizedBox(
           height: 350,
-          child: GridView.count(
-            crossAxisCount: 4,
-            childAspectRatio: 2,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
-            children: List.generate(
-              cards.length,
-              (index) => GestureDetector(
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 8, mainAxisExtent: 96, crossAxisSpacing: 20, mainAxisSpacing: 20),
+            itemCount: cards.length,
+            itemBuilder: (context, index) => GestureDetector(
                 onTap: () => selectedCards.length == 2 ||
                         selectedCards.contains(index) ||
                         matchCards.contains(index)
                     ? null
                     : selectCard(index),
-                child: cards[index],
-              ),
-            ),
+                child: cards[index]),
           ),
         ),
         const SizedBox(

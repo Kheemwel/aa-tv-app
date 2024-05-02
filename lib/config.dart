@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+const appName = 'AA TV';
 
 final Map<String, dynamic> palette = {
   'primary': Colors.blue,

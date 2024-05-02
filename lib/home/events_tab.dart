@@ -95,39 +95,49 @@ class _EventsTabState extends State<EventsTab> {
     }
 
     if (_events.isNotEmpty) {
-      return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
-          itemBuilder: (BuildContext context, int index) {
-            final event = _events[index];
-            return ListTile(
-              focusColor: Colors.green[900],
-              tileColor: Colors.grey[800],
-              textColor: Colors.white,
-              title: Text(
-                event.title,
-                style: const TextStyle(fontSize: 20),
-              ),
-              subtitle: SizedBox(
-                height: 100,
-                child: Text(
-                    maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                    event.description),
-              ),
-              trailing: Column(
+      return GridView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, mainAxisSpacing: 10, crossAxisSpacing: 10),
+        itemCount: _events.length,
+        itemBuilder: (context, index) {
+          final announcement = _events[index];
+          return ListTile(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            focusColor: Colors.green[900],
+            tileColor: Colors.grey[800],
+            textColor: Colors.white,
+            title: SizedBox(
+              height: 100,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Start: ${event.getEventStart()}'),
-                  Text('End: ${event.getEventEnd()}')
+                  Text(
+                    announcement.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    'Start: ${announcement.getEventStart()}',
+                    style: TextStyle(color: Colors.grey[300], fontSize: 12),
+                  ),
+                  Text(
+                    'End: ${announcement.getEventEnd()}',
+                    style: TextStyle(color: Colors.grey[300], fontSize: 12),
+                  ),
                 ],
               ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 10,
-            );
-          },
-          itemCount: _events.length);
+            ),
+            subtitle: Text(
+                maxLines: 10,
+                overflow: TextOverflow.ellipsis,
+                announcement.description),
+          );
+        },
+      );
     }
 
     return const CircularProgressIndicator();

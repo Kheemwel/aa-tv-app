@@ -44,6 +44,8 @@ class _PagesViewerState extends State<PagesViewer>
             if (_currentPageIndex < (_tabController.length - 1)) {
               _updateCurrentPageIndex(_currentPageIndex + 1);
             }
+          } else if (event.logicalKey == LogicalKeyboardKey.goBack) {
+            Navigator.pop(context);
           }
           return KeyEventResult.handled;
         } else {

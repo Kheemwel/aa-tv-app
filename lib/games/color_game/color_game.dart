@@ -36,8 +36,8 @@ class _ColorGameState extends State<ColorGame> {
               height: 100,
               alignment: Alignment.center,
               child: Text(colors[selectedIndex] == colorCube.selectedColor
-                  ? 'Win'
-                  : 'Loose'),
+                  ? 'You Win'
+                  : 'You Lose'),
             ),
           ),
         );
@@ -48,26 +48,40 @@ class _ColorGameState extends State<ColorGame> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        const SizedBox(
+          height: 25,
+        ),
         colorCube,
-        SizedBox(
-          height: 340,
-          width: 500,
-          child: GridView.count(
-            padding: const EdgeInsets.all(10),
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            crossAxisCount: 3,
-            children: List.generate(
-                colors.length, (index) => _colorSelector(colors[index], index)),
+        const SizedBox(
+          height: 25,
+        ),
+        Expanded(
+          child: SizedBox(
+              height: 340,
+            width: 500,
+            child: GridView.count(
+                padding: const EdgeInsets.all(10),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              crossAxisCount: 3,
+              children: List.generate(
+                  colors.length, (index) => _colorSelector(colors[index], index)),
+            ),
           ),
+        ),
+        const SizedBox(
+          height: 25,
         ),
         Visibility(
             visible: selectedIndex >= 0,
             child: ElevatedButton(
                 onPressed: () => colorCube.start(), child: const Text('ROLL'))),
+        const SizedBox(
+          height: 25,
+        ),
       ],
     );
   }

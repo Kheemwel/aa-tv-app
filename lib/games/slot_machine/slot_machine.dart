@@ -11,6 +11,7 @@ class SlotMachine extends StatefulWidget {
 class _SlotMachineState extends State<SlotMachine> {
   List<String> items = ['I', 'M', 'U', 'S'];
   List<String> slots = List<String>.filled(4, '');
+  List<bool> states = List<bool>.filled(4, false);
   final String answer = "IMUS";
   final List<CarouselController> controllers =
       List.generate(4, (index) => CarouselController());
@@ -24,9 +25,12 @@ class _SlotMachineState extends State<SlotMachine> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        const SizedBox(height: 50,),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildSlot(0),
@@ -44,6 +48,9 @@ class _SlotMachineState extends State<SlotMachine> {
             _buildSlot(3),
           ],
         ),
+        const SizedBox(
+          height: 50,
+        ),
         ElevatedButton(
             onPressed: () async {
               rollSlot(10, 0);
@@ -59,8 +66,35 @@ class _SlotMachineState extends State<SlotMachine> {
   void rollSlot(int duration, int index) async {
     for (var i = 0; i < duration; i++) {
       await Future.delayed(const Duration(milliseconds: 100));
-      controllers[index].previousPage(duration: const Duration(milliseconds: 100));
+      controllers[index]
+          .previousPage(duration: const Duration(milliseconds: 100));
     }
+    setState(() {
+      states[index] = true;
+    });
+
+    if (allTrue(states)) {
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            width: 100,
+            height: 100,
+            alignment: Alignment.center,
+            child: Text(slots.join() == answer ? 'You Win' : 'You Lose'),
+          ),
+        ),
+      );
+      setState(() {
+        states = List.filled(4, false);
+      });
+    }
+  }
+
+  bool allTrue(List<bool> bools) {
+    // Check if every element is true
+    return bools.every((element) => element == true);
   }
 
   Widget _buildSlot(int index) {

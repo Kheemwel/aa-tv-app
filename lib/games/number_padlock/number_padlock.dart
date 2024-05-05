@@ -21,14 +21,21 @@ class _NumberPadlockState extends State<NumberPadlock> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        const SizedBox(
+          height: 10,
+        ),
         Text(
           'Password: $input',
           style: const TextStyle(fontSize: 24),
         ),
-        const SizedBox(height: 10,),
+        const SizedBox(
+          height: 10,
+        ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildLocks(0),
@@ -96,7 +103,8 @@ class _NumberPadlockState extends State<NumberPadlock> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-              iconSize: 64,
+              iconSize: 48,
+              color: Colors.white,
               onPressed: controller.nextPage,
               icon: const Icon(Icons.arrow_drop_up)),
           const SizedBox(height: 20),
@@ -105,7 +113,7 @@ class _NumberPadlockState extends State<NumberPadlock> {
             options: CarouselOptions(
               enlargeCenterPage: true,
               viewportFraction: 0.3,
-              height: 200,
+              height: 150,
               scrollDirection: Axis.vertical,
               onPageChanged: (page, reason) {
                 setState(() {
@@ -121,7 +129,8 @@ class _NumberPadlockState extends State<NumberPadlock> {
                 .toList(),
           ),
           IconButton(
-              iconSize: 64,
+              iconSize: 48,
+              color: Colors.white,
               onPressed: controller.previousPage,
               icon: const Icon(Icons.arrow_drop_down)),
         ],

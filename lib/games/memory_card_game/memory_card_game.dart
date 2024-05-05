@@ -44,7 +44,7 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Column(
               children: [
@@ -52,6 +52,7 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
                 Text('$time'),
               ],
             ),
+            const SizedBox(width: 100,),
             Column(
               children: [
                 const Text('Items Matched:'),
@@ -61,25 +62,30 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
           ],
         ),
         const SizedBox(
-          height: 50,
+          height: 25,
         ),
-        SizedBox(
-          height: 350,
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 8, mainAxisExtent: 96, crossAxisSpacing: 20, mainAxisSpacing: 20),
-            itemCount: cards.length,
-            itemBuilder: (context, index) => GestureDetector(
-                onTap: () => selectedCards.length == 2 ||
-                        selectedCards.contains(index) ||
-                        matchCards.contains(index)
-                    ? null
-                    : selectCard(index),
-                child: cards[index]),
+        Expanded(
+          child: SizedBox(
+            height: 350,
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 8,
+                  mainAxisExtent: 96,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20),
+              itemCount: cards.length,
+              itemBuilder: (context, index) => GestureDetector(
+                  onTap: () => selectedCards.length == 2 ||
+                          selectedCards.contains(index) ||
+                          matchCards.contains(index)
+                      ? null
+                      : selectCard(index),
+                  child: cards[index]),
+            ),
           ),
         ),
         const SizedBox(
-          height: 50,
+          height: 25,
         ),
         ElevatedButton(
             onPressed: () async {
@@ -99,7 +105,10 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
                 ),
               );
             },
-            child: const Text('RESTART'))
+            child: const Text('RESTART')),
+        const SizedBox(
+          height: 25,
+        ),
       ],
     );
   }

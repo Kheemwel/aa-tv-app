@@ -18,80 +18,75 @@ class _ShuffleCupsState extends State<ShuffleCups> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Visibility(
-              visible: doneShuffling && selectedCup >= 0,
-              child: Text(
-                selectedCup == ballIndex ? 'You Win' : 'Loser',
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              )),
-          const SizedBox(height: 50,),
-          SizedBox(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          width: 450,
+          height: 260,
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: List.generate(
+                positions.length,
+                (index) => _cup(positions[index], showBall,
+                    selectedCup == index, index == ballIndex)),
+          ),
+        ),
+        const SizedBox(height: 25),
+        Visibility(
+          visible: doneShuffling && selectedCup < 0,
+          child: SizedBox(
             width: 450,
-            height: 260,
+            height: 64,
             child: Stack(
               alignment: AlignmentDirectional.center,
-              children: List.generate(
-                  positions.length,
-                  (index) => _cup(positions[index], showBall,
-                      selectedCup == index, index == ballIndex)),
+              children: [
+                Positioned(
+                    left: 32,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_circle_up,
+                        color: Colors.green,
+                        size: 64,
+                      ),
+                      onPressed: () => _selectCup(0),
+                    )),
+                Positioned(
+                    left: 182,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_circle_up,
+                        color: Colors.green,
+                        size: 64,
+                      ),
+                      onPressed: () => _selectCup(150),
+                    )),
+                Positioned(
+                    left: 332,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_circle_up,
+                        color: Colors.green,
+                        size: 64,
+                      ),
+                      onPressed: () => _selectCup(300),
+                    )),
+              ],
             ),
           ),
-          Visibility(
-            visible: doneShuffling && selectedCup < 0,
-            child: SizedBox(
-              width: 450,
-              height: 100,
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  Positioned(
-                      left: 32,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_circle_up,
-                          color: Colors.green,
-                          size: 64,
-                        ),
-                        onPressed: () => _selectCup(0),
-                      )),
-                  Positioned(
-                      left: 182,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_circle_up,
-                          color: Colors.green,
-                          size: 64,
-                        ),
-                        onPressed: () => _selectCup(150),
-                      )),
-                  Positioned(
-                      left: 332,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_circle_up,
-                          color: Colors.green,
-                          size: 64,
-                        ),
-                        onPressed: () => _selectCup(300),
-                      )),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 50,),
-          ElevatedButton(
-            onPressed: isShuffling ? null : _shuffle,
+        ),
+        Visibility(
+          visible: !isShuffling && !(doneShuffling && selectedCup < 0),
+          child: ElevatedButton(
+            onPressed: _shuffle,
             child: const Text('SHUFFLE'),
           ),
-          const SizedBox(height: 50,),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -100,6 +95,21 @@ class _ShuffleCupsState extends State<ShuffleCups> {
       showBall = true;
       selectedCup = positions.indexOf(position);
     });
+
+    showDialog(
+        context: context,
+        builder: (context) => Dialog(
+              child: Container(
+                width: 100,
+                height: 100,
+                alignment: Alignment.center,
+                child: Text(
+                  selectedCup == ballIndex ? 'You Win' : 'You Lose',
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ));
   }
 
   void _shuffle() async {

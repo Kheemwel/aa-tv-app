@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/games/number_padlock/countdown_timer.dart';
 
 class NumberPadlock extends StatefulWidget {
   const NumberPadlock({super.key});
@@ -17,6 +18,50 @@ class _NumberPadlockState extends State<NumberPadlock> {
   final List<CarouselController> controllers =
       List.generate(4, (index) => CarouselController());
   String input = "????";
+  int timer = 60;
+  late CountDown countDown;
+
+  @override
+  void initState() {
+    super.initState();
+
+    countDown = CountDown(
+        duration: timer,
+        onTick: (time) => setState(() {
+              timer = time;
+              if (locks.join() == answer) {
+                countDown.cancel();
+                showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      width: 100,
+                      height: 100,
+                      alignment: Alignment.center,
+                      child: Text('You win the game in $timer seconds'),
+                    ),
+                  ),
+                );
+              }
+            }),
+        onFinished: () {
+          if (locks.join() != answer) {
+            showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  width: 100,
+                  height: 100,
+                  alignment: Alignment.center,
+                  child: const Text('Game Over'),
+                ),
+              ),
+            );
+          }
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +69,10 @@ class _NumberPadlockState extends State<NumberPadlock> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        const SizedBox(
+          height: 10,
+        ),
+        Text('Countdown: ${timer.toString()}'),
         const SizedBox(
           height: 10,
         ),
@@ -136,5 +185,11 @@ class _NumberPadlockState extends State<NumberPadlock> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    countDown.cancel();
   }
 }

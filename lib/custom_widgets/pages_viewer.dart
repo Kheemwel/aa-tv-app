@@ -39,10 +39,14 @@ class _PagesViewerState extends State<PagesViewer>
           if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
             if (_currentPageIndex > 0) {
               _updateCurrentPageIndex(_currentPageIndex - 1);
+            } else {
+              _updateCurrentPageIndex(_tabController.length - 1);
             }
           } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
             if (_currentPageIndex < (_tabController.length - 1)) {
               _updateCurrentPageIndex(_currentPageIndex + 1);
+            } else {
+              _updateCurrentPageIndex(0);
             }
           } else if (event.logicalKey == LogicalKeyboardKey.goBack) {
             Navigator.pop(context);
@@ -107,18 +111,19 @@ class PageIndicator extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Visibility(
-            visible: currentPageIndex > 0,
-            child: IconButton(
-              splashRadius: 16.0,
-              padding: EdgeInsets.zero,
-              onPressed: () {
+          IconButton(
+            splashRadius: 16.0,
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              if (currentPageIndex > 0) {
                 onUpdateCurrentPageIndex(currentPageIndex - 1);
-              },
-              icon: const Icon(
-                Icons.arrow_left_rounded,
-                size: 32.0,
-              ),
+              } else {
+                onUpdateCurrentPageIndex(tabController.length - 1);
+              }
+            },
+            icon: const Icon(
+              Icons.arrow_left_rounded,
+              size: 32.0,
             ),
           ),
           TabPageSelector(
@@ -126,20 +131,21 @@ class PageIndicator extends StatelessWidget {
             color: colorScheme.background,
             selectedColor: colorScheme.primary,
           ),
-          Visibility(
-            visible: currentPageIndex < tabController.length - 1,
-            child: IconButton(
-              splashRadius: 16.0,
-              padding: EdgeInsets.zero,
-              onPressed: () {
+          IconButton(
+            splashRadius: 16.0,
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              if (currentPageIndex < (tabController.length - 1)) {
                 onUpdateCurrentPageIndex(currentPageIndex + 1);
-              },
-              icon: const Icon(
-                Icons.arrow_right_rounded,
-                size: 32.0,
-              ),
+              } else {
+                onUpdateCurrentPageIndex(0);
+              }
+            },
+            icon: const Icon(
+              Icons.arrow_right_rounded,
+              size: 32.0,
             ),
-          )
+          ),
         ],
       ),
     );

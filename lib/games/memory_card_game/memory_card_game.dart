@@ -69,7 +69,7 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
             height: 350,
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 8,
+                  crossAxisCount: 6,
                   mainAxisExtent: 96,
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20),

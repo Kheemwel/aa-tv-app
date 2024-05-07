@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +14,12 @@ const List<String> cards = [
 ];
 
 /// Duplicate the cards for matching and shuffle it
-List<String> multipliedCards({int multiplier = 4}) {
-  int multi = max(4, multiplier) * 2;
+List<String> multipliedCards() {
+  const multi = 3;
+  int multiplier = multi  * 2;
   List<String> multiCards = [];
   for (var card in cards) {
-    for (var i = 0; i < multi; i++) {
+    for (var i = 0; i < multiplier; i++) {
       multiCards.add(card);
     }
   }

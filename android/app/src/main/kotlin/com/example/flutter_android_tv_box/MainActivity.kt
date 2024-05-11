@@ -1,4 +1,4 @@
-package com.example.flutter_android_tv_box
+package com.kheemwel.aa_tv
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_android_tv_box/home/home_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/screens/home/home_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -11,49 +14,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          canvasColor: Colors.grey[800],
-          textTheme: const TextTheme(
-            bodySmall: TextStyle(color: Colors.white),
-            bodyMedium: TextStyle(color: Colors.white),
-            bodyLarge: TextStyle(color: Colors.white),
-          ),
-          appBarTheme: AppBarTheme(
-              titleSpacing: 50,
-              iconTheme: const IconThemeData(color: Colors.blue),
-              titleTextStyle:
-                  const TextStyle(color: Colors.white, fontSize: 26),
-              backgroundColor: Colors.grey[900]),
-          scaffoldBackgroundColor: Colors.grey[900],
-          tabBarTheme: TabBarTheme(
-            dividerColor: Colors.transparent,
-            dividerHeight: 0,
-            indicator: BoxDecoration(
-                color: Colors.green[900],
-                borderRadius: const BorderRadius.all(Radius.circular(10))),
-            labelPadding: EdgeInsets.zero, // remove default padding in tabs
-            labelStyle: const TextStyle(color: Colors.white, fontSize: 18),
-            unselectedLabelColor: Colors.white,
-          ),
-          menuTheme: MenuThemeData(
-              style: MenuStyle(
-                  surfaceTintColor:
-                      MaterialStateProperty.all(Colors.transparent),
-                  backgroundColor:
-                      MaterialStateProperty.all(Colors.grey[800]))),
-          dialogTheme: DialogTheme(
-              contentTextStyle:
-                  const TextStyle(fontSize: 18, color: Colors.white),
-              surfaceTintColor: Colors.transparent,
-              backgroundColor: Colors.grey[800]),
-          drawerTheme: DrawerThemeData(
-              backgroundColor: Colors.grey[800],
-              surfaceTintColor: Colors.transparent),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
-        home: const HomeScreen());
+    
+    return Shortcuts(
+      shortcuts: <LogicalKeySet, Intent> {
+        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+        LogicalKeySet(LogicalKeyboardKey.enter): const ActivateIntent(),
+      },
+      child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: themeData,
+          home: const HomeScreen()),
+    );
   }
 }

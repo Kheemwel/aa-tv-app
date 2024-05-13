@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/widgets/focus_border.dart';
 import 'package:flutter_android_tv_box/data/database/sqlite_notifications.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
@@ -109,7 +110,7 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
                   alignment: Alignment
                       .topCenter, // <-- changing the position of the indicator
                   child: TriangleIndicator(
-                    color: Color(Colors.green[900]!
+                    color: Color(Palette.getColor('secondary')!
                         .value), // <-- changing the color of the indicator
                     width: 40, // <-- changing the width of the indicator
                     height: 40, // <-- changing the height of the indicator
@@ -180,7 +181,7 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
                   autofocus: true,
                   style: TextButton.styleFrom(
                       fixedSize: const Size(100, 25),
-                      backgroundColor: Colors.blue),
+                      backgroundColor: Palette.getColor('primary')),
                   onPressed: _handleSpin,
                   child: const Text(
                     'SPIN',

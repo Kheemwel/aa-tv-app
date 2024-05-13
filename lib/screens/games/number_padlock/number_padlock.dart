@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/data/network/send_data.dart';
 import 'package:flutter_android_tv_box/screens/games/number_padlock/countdown_timer.dart';
 
 class NumberPadlock extends StatefulWidget {
@@ -43,6 +45,8 @@ class _NumberPadlockState extends State<NumberPadlock> {
                     ),
                   ),
                 );
+
+                SendData.sendGameResult(gameName: 'Number Padlock', description: 'They win the game in $timer seconds');
               }
             }),
         onFinished: () {
@@ -172,7 +176,7 @@ class _NumberPadlockState extends State<NumberPadlock> {
             ),
             items: list
                 .map((item) => Container(
-                      color: Colors.blue,
+                      color: Palette.getColor('primary'),
                       child: Center(child: Text(item.toString())),
                     ))
                 .toList(),

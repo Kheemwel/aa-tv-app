@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 
 // ignore: non_constant_identifier_names
+/// Create icon button with a border when focused
 IconButton buildFocusableIconButton({
     required VoidCallback onPressed,
     required Icon icon,
@@ -14,7 +16,7 @@ IconButton buildFocusableIconButton({
           if (states.contains(MaterialState.focused)) {
             return BorderSide(
               color:
-                  Color(Colors.green[800]!.value), // Border color when focused
+                  Palette.getColor('tertiary'), // Border color when focused
               width: 3.0, // Border width
             );
           }

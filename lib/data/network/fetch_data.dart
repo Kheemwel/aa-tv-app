@@ -6,7 +6,7 @@ import 'package:flutter_android_tv_box/data/models/video_categories.dart';
 import 'package:flutter_android_tv_box/data/models/videos.dart';
 import 'package:http/http.dart' as http;
 
-/// Collection of functions of fetching data from back-end
+/// Collection of functions for fetching data from back-end
 class FetchData {
 
   /// Base function of fetching data

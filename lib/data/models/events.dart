@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+/// Model class for events from back-end
 class Events {
   final int id;
   final String title;

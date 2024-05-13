@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/models/events.dart';
 import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
 
@@ -27,7 +28,7 @@ class _EventsTabState extends State<EventsTab> {
         _isContentEmpty = _events.isEmpty;
       });
     } catch (error) {
-      throw Exception(error);
+      rethrow;
     }
   }
 
@@ -52,8 +53,8 @@ class _EventsTabState extends State<EventsTab> {
           return ListTile(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            focusColor: Colors.green[900],
-            tileColor: Colors.grey[800],
+            focusColor: Palette.getColor('secondary'),
+            tileColor: Palette.getColor('secondary-background'),
             textColor: Colors.white,
             title: SizedBox(
               height: 100,
@@ -69,11 +70,11 @@ class _EventsTabState extends State<EventsTab> {
                   ),
                   Text(
                     'Start: ${announcement.getEventStart()}',
-                    style: TextStyle(color: Colors.grey[300], fontSize: 12),
+                    style: TextStyle(color: Palette.getColor('text-dark'), fontSize: 12),
                   ),
                   Text(
                     'End: ${announcement.getEventEnd()}',
-                    style: TextStyle(color: Colors.grey[300], fontSize: 12),
+                    style: TextStyle(color: Palette.getColor('text-dark'), fontSize: 12),
                   ),
                 ],
               ),

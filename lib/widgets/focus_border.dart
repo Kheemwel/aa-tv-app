@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 
+/// Create a container with a border when focused
 // ignore: must_be_immutable
 class FocusBorder extends StatefulWidget {
   final Widget child;
@@ -28,7 +30,7 @@ class _FocusBorderState extends State<FocusBorder> {
         alignment: widget.isContentCentered ? Alignment.center : null,
         decoration: BoxDecoration(
           border: Border.all(
-            color: _hasFocus ? Color(Colors.green[800]!.value) : Colors.transparent,
+            color: _hasFocus ? Palette.getColor('tertiary') : Colors.transparent,
             width: 3.0,
           ),
         ),

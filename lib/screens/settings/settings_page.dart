@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/data/database/shared_preferences.dart';
 
 const List<String> list = <String>['Low', 'Medium', 'High'];
 
@@ -12,6 +14,20 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPage extends State<SettingsPage> {
   static String dropdownValue = 'Medium';
 
+  final TextEditingController textEditingController =
+      TextEditingController(text: SharedPref.getUsername());
+
+  @override
+  void initState() {
+    super.initState();
+    textEditingController.addListener(() {
+      SharedPref.setUsername(textEditingController.text);
+      if (textEditingController.text.isEmpty) {
+        textEditingController.text = 'AA TV User';
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +39,27 @@ class _SettingsPage extends State<SettingsPage> {
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
           children: [
             ListTile(
-              focusColor: Colors.green[900],
+              focusColor: Palette.getColor('secondary'),
+              tileColor: Colors.transparent,
+              textColor: Colors.white,
+              title: const Text(
+                'Username',
+                style: TextStyle(fontSize: 20),
+              ),
+              subtitle: TextField(
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Palette.getColor('text-dark'))),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Palette.getColor('tertiary'))),
+                    focusColor: Palette.getColor('tertiary'),
+                    hintText: 'Enter username',
+                    hintStyle: TextStyle(color: Palette.getColor('text-dark')),
+                  )),
+            ),
+            ListTile(
+              focusColor: Palette.getColor('secondary'),
               tileColor: Colors.transparent,
               textColor: Colors.white,
               title: const Text(
@@ -32,7 +68,7 @@ class _SettingsPage extends State<SettingsPage> {
               ),
               subtitle: Text(
                 'Delete notifications that are older than 30 days',
-                style: TextStyle(color: Colors.grey[300], fontSize: 12),
+                style: TextStyle(color: Palette.getColor('text-dark'), fontSize: 12),
               ),
               trailing: Switch(value: true, onChanged: (bool value) {}),
             ),
@@ -40,7 +76,7 @@ class _SettingsPage extends State<SettingsPage> {
               height: 10,
             ),
             ListTile(
-              focusColor: Colors.green[900],
+              focusColor: Palette.getColor('secondary'),
               tileColor: Colors.transparent,
               textColor: Colors.white,
               title: const Text(
@@ -53,7 +89,7 @@ class _SettingsPage extends State<SettingsPage> {
               height: 10,
             ),
             ListTile(
-              focusColor: Colors.green[900],
+              focusColor: Palette.getColor('secondary'),
               tileColor: Colors.transparent,
               textColor: Colors.white,
               title: const Text(

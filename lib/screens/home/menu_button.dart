@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/screens/about/about_page.dart';
 import 'package:flutter_android_tv_box/widgets/focus_border.dart';
 import 'package:flutter_android_tv_box/screens/games/games_page.dart';
@@ -65,7 +66,7 @@ MenuItemButton buildMenuItemButton(
       children: [
         Icon(
           icon,
-          color: Colors.blue,
+          color: Palette.getColor('primary'),
         ),
         const SizedBox(width: 10),
         Text(

@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/data/network/send_data.dart';
 import 'package:flutter_android_tv_box/widgets/focusable_elevated_button.dart';
 
 class SlotMachine extends StatefulWidget {
@@ -77,6 +79,7 @@ class _SlotMachineState extends State<SlotMachine> {
       states[index] = true;
     });
 
+    await Future.delayed(const Duration(milliseconds: 500));
     if (allTrue(states)) {
       showDialog(
         context: context,
@@ -90,9 +93,16 @@ class _SlotMachineState extends State<SlotMachine> {
           ),
         ),
       );
+
       setState(() {
         states = List.filled(4, false);
       });
+
+      if (slots.join() == answer) {
+        SendData.sendGameResult(
+            gameName: 'Slot Machine',
+            description: "They win by successfully getting 'IMUS' combination");
+      }
     }
   }
 
@@ -124,7 +134,7 @@ class _SlotMachineState extends State<SlotMachine> {
             ),
             items: itemList
                 .map((item) => Container(
-                      color: Colors.blue,
+                      color: Palette.getColor('primary'),
                       child: Center(child: Text(item)),
                     ))
                 .toList(),

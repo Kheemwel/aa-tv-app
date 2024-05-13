@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/database/sqlite_notifications.dart';
 import 'package:flutter_android_tv_box/data/models/notifications.dart';
 
@@ -132,8 +133,8 @@ class NotificationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      focusColor: Colors.green[900],
-      tileColor: Colors.grey[800],
+      focusColor: Palette.getColor('secondary'),
+      tileColor: Palette.getColor('secondary-background'),
       textColor: Colors.white,
       title: Text(notification.title),
       subtitle: Text(notification.message),
@@ -154,7 +155,7 @@ class NotificationItem extends StatelessWidget {
               flex: 3,
               child: Container(
                 alignment: Alignment.center,
-                color: Colors.grey[900],
+                color: Palette.getColor('primary-background'),
                 child: Text(
                   notification.message,
                   style: const TextStyle(fontSize: 20),

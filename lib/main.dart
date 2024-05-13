@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/data/database/shared_preferences.dart';
 import 'package:flutter_android_tv_box/screens/home/home_screen.dart';
 
+/// Main entry of the app
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize shared preferences
+  SharedPref.init();
+
   runApp(const MyApp());
 }
 

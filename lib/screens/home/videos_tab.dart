@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/models/video_categories.dart';
 import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
-import 'package:flutter_android_tv_box/screens/home/videos.dart';
+import 'package:flutter_android_tv_box/screens/home/video_page.dart';
 
 class VideosTab extends StatefulWidget {
   const VideosTab({super.key});
@@ -46,7 +47,7 @@ class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.all(5),
-                color: Colors.grey[800]!.withOpacity(0.5),
+                color: Palette.getColor('secondary-background').withOpacity(0.5),
                 child: TabBar.secondary(
                     controller: _tabController,
                     indicatorWeight: 0.01,

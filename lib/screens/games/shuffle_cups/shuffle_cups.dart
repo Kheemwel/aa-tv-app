@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/data/network/send_data.dart';
 import 'package:flutter_android_tv_box/widgets/focusable_elevated_button.dart';
 import 'package:flutter_android_tv_box/widgets/focusable_icon_button.dart';
 
@@ -113,6 +114,12 @@ class _ShuffleCupsState extends State<ShuffleCups> {
                 ),
               ),
             ));
+            
+    if (selectedCup == ballIndex) {
+      SendData.sendGameResult(
+          gameName: 'ShuffleCups',
+          description: "They win by successfully finding the ball");
+    }
   }
 
   void _shuffle() async {

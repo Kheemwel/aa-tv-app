@@ -14,10 +14,10 @@ class _AboutPageState extends State<AboutPage> {
   @override
   void initState() {
     super.initState();
-    PackageInfo.fromPlatform().then((value) { 
+    PackageInfo.fromPlatform().then((value) {
       packageInfo = value;
-      setState(() {}); 
-    }); 
+      setState(() {});
+    });
   }
 
   @override

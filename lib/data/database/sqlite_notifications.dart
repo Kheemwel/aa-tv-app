@@ -2,6 +2,7 @@ import 'package:flutter_android_tv_box/data/models/notifications.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+/// Utility class for handling notifications in database
 class SQLiteNotifications {
   late Database _database;
   bool _isInitialized = false;
@@ -14,7 +15,7 @@ class SQLiteNotifications {
 
   Future<void> _initDatabase() async {
     _database = await openDatabase(
-      join(await getDatabasesPath(), 'android_tv_database.db'),
+      join(await getDatabasesPath(), 'aa_tv.db'),
       onCreate: (db, version) {
         return db.execute(
           'CREATE TABLE notification('
@@ -28,6 +29,7 @@ class SQLiteNotifications {
     );
   }
 
+  /// Insert notification
   Future<void> insertNotification(
       String title, String message, String datetime) async {
     if (!_isInitialized) {
@@ -44,6 +46,7 @@ class SQLiteNotifications {
     );
   }
 
+  /// Get the list of all notifications
   Future<List<Notifications>> queryNotifications() async {
     if (!_isInitialized) {
       await _initDatabase();
@@ -60,6 +63,7 @@ class SQLiteNotifications {
     }).toList();
   }
 
+  /// Update notification
   Future<void> updateNotification(Notifications notification) async {
     if (!_isInitialized) {
       await _initDatabase();
@@ -76,6 +80,7 @@ class SQLiteNotifications {
     );
   }
 
+  /// Delete notification by its id
   Future<void> deleteNotification(int id) async {
     if (!_isInitialized) {
       await _initDatabase();
@@ -87,6 +92,7 @@ class SQLiteNotifications {
     );
   }
 
+  /// Clear all notifications in the database
   Future<void> clearNotifications() async {
     if (!_isInitialized) {
       await _initDatabase();
@@ -94,6 +100,7 @@ class SQLiteNotifications {
     await _database.delete('notification');
   }
 
+  /// Close the instance of the database 
   void dispose() {
     _database.close();
   }

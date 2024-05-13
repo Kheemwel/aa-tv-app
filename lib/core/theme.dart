@@ -1,63 +1,82 @@
+/// Anything related to themes defined here
+library;
+
 import 'package:flutter/material.dart';
 
-final Map<String, dynamic> palette = {
-  'primary': Colors.blue,
-  'secondary': Colors.green[900],
-  'tertiary': Colors.green[800],
-  'primary-background': Colors.grey[900],
-  'secondary-background': Colors.grey[800],
-  'text-dark': Colors.grey[300],
-};
+/// Utility class for the app palette
+class Palette {
+  /// Selected colors for the app
+  static final Map<String, Color?> _palette = {
+    'primary': Colors.blue,
+    'secondary': Colors.green[900],
+    'tertiary': Colors.green[800],
+    'primary-background': Colors.grey[900],
+    'secondary-background': Colors.grey[800],
+    'text-dark': Colors.grey[300],
+  };
 
-AppBarTheme appBarTheme = AppBarTheme(
+  /// Convert Color? to Color
+  static Color _toColor(Color? color) {
+    return Color(color!.value);
+  }
+
+  /// Get the color from palette
+  static Color getColor(String name) {
+    return _toColor(_palette[name]);
+  }
+}
+
+final AppBarTheme appBarTheme = AppBarTheme(
     titleSpacing: 50,
-    iconTheme: const IconThemeData(color: Colors.blue),
+    iconTheme: IconThemeData(color: Palette.getColor('primary')),
     titleTextStyle: const TextStyle(color: Colors.white, fontSize: 26),
-    backgroundColor: Colors.grey[900]);
+    backgroundColor: Palette.getColor('primary-background'));
 
-TabBarTheme tabBarTheme = TabBarTheme(
+final TabBarTheme tabBarTheme = TabBarTheme(
   dividerColor: Colors.transparent,
   dividerHeight: 0,
   indicator: BoxDecoration(
-      color: Colors.green[900],
+      color: Palette.getColor('secondary'),
       borderRadius: const BorderRadius.all(Radius.circular(10))),
   labelPadding: EdgeInsets.zero, // remove default padding in tabs
   labelStyle: const TextStyle(color: Colors.white, fontSize: 18),
   unselectedLabelColor: Colors.white,
   overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
     if (states.contains(MaterialState.focused)) {
-      return Color(Colors.green[800]!.value); // Change background color when focused
+      return Palette.getColor('tertiary'); // Change background color when focused
     }
     return Colors.transparent;
   }),
 );
 
-MenuThemeData menuThemeData = MenuThemeData(
+final MenuThemeData menuThemeData = MenuThemeData(
     style: MenuStyle(
         surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
-        backgroundColor: MaterialStateProperty.all(Colors.grey[800])));
+        backgroundColor:
+            MaterialStateProperty.all(Palette.getColor('secondary-background'))));
 
-DialogTheme dialogTheme = DialogTheme(
+final DialogTheme dialogTheme = DialogTheme(
     contentTextStyle: const TextStyle(fontSize: 18, color: Colors.white),
     surfaceTintColor: Colors.transparent,
-    backgroundColor: Colors.grey[800]);
+    backgroundColor: Palette.getColor('secondary-background'));
 
-DrawerThemeData drawerThemeData = DrawerThemeData(
-    backgroundColor: Colors.grey[800], surfaceTintColor: Colors.transparent);
+final DrawerThemeData drawerThemeData = DrawerThemeData(
+    backgroundColor: Palette.getColor('secondary-background'),
+    surfaceTintColor: Colors.transparent);
 
-ThemeData themeData = ThemeData(
-  canvasColor: Colors.grey[800],
+final ThemeData themeData = ThemeData(
+  canvasColor: Palette.getColor('secondary-background'),
   textTheme: const TextTheme(
     bodySmall: TextStyle(color: Colors.white),
     bodyMedium: TextStyle(color: Colors.white),
     bodyLarge: TextStyle(color: Colors.white),
   ),
   appBarTheme: appBarTheme,
-  scaffoldBackgroundColor: Colors.grey[900],
+  scaffoldBackgroundColor: Palette.getColor('primary-background'),
   tabBarTheme: tabBarTheme,
   menuTheme: menuThemeData,
   dialogTheme: dialogTheme,
   drawerTheme: drawerThemeData,
-  colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+  colorScheme: ColorScheme.fromSeed(seedColor: Palette.getColor('primary')),
   useMaterial3: true,
 );

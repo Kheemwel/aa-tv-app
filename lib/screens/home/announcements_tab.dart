@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/models/announcements.dart';
 import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
 
@@ -27,8 +28,7 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
         _isContentEmpty = _announcements.isEmpty;
       });
     } catch (error) {
-      print('Error: $error');
-      // Handle error
+      rethrow;
     }
   }
 
@@ -53,8 +53,8 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
           return ListTile(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            focusColor: Colors.green[900],
-            tileColor: Colors.grey[800],
+            focusColor: Palette.getColor('secondary'),
+            tileColor: Palette.getColor('secondary-background'),
             textColor: Colors.white,
             title: SizedBox(
               height: 75,
@@ -70,7 +70,7 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
                   ),
                   Text(
                     announcement.getFormattedDate(),
-                    style: TextStyle(color: Colors.grey[300], fontSize: 12),
+                    style: TextStyle(color: Palette.getColor('text-dark'), fontSize: 12),
                   ),
                 ],
               ),
@@ -98,7 +98,7 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
             Expanded(
                 child: Container(
               padding: const EdgeInsets.all(20),
-              color: Colors.grey[900],
+              color: Palette.getColor('primary-background'),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
 
 import 'package:video_player/video_player.dart';
@@ -87,7 +88,7 @@ class _VideoPageState extends State<VideoPage> {
       looping: true,
       materialProgressColors: ChewieProgressColors(
           playedColor: Colors.green,
-          bufferedColor: Color(Colors.green[900]!.value)),
+          bufferedColor: Palette.getColor('secondary')),
       fullScreenByDefault: true,
     );
 
@@ -128,7 +129,7 @@ class _VideoTileState extends State<VideoTile> {
   @override
   void initState() {
     super.initState();
-    backgroundColor = Colors.grey[800];
+    backgroundColor = Palette.getColor('secondary-background');
   }
 
   @override
@@ -136,7 +137,7 @@ class _VideoTileState extends State<VideoTile> {
     return Focus(
       onFocusChange: (value) {
         setState(() {
-          backgroundColor = value ? Colors.green[900] : Colors.grey[800];
+          backgroundColor = value ? Palette.getColor('secondary') : Palette.getColor('secondary-background');
         });
       },
       child: GestureDetector(
@@ -194,7 +195,7 @@ class _VideoTileState extends State<VideoTile> {
                     ),
                     Text(
                       widget.date,
-                      style: TextStyle(color: Colors.grey[300]),
+                      style: TextStyle(color: Palette.getColor('text-dark')),
                     ),
                     const SizedBox(
                       height: 20,

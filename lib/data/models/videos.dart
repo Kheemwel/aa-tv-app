@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+/// Model class for videos from back-end
 class Videos {
   final int id;
   final String title;

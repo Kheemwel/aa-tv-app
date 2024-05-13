@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/data/network/send_data.dart';
 import 'package:flutter_android_tv_box/screens/games/memory_card_game/model.dart';
 import 'package:flutter_android_tv_box/widgets/focusable_elevated_button.dart';
 
@@ -155,6 +156,8 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
             ),
           ),
         );
+
+        SendData.sendGameResult(gameName: 'Memory Card Game', description: 'They finish the game in $time seconds');
       } else {
         selectedCards.clear();
       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/screens/about/about_page.dart';
 import 'package:flutter_android_tv_box/screens/games/games_page.dart';
 import 'package:flutter_android_tv_box/screens/home/announcements_tab.dart';
@@ -22,7 +23,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugDumpFocusTree();
     return DefaultTabController(
         initialIndex: 0,
         length: 3,
@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
               bottom: PreferredSize(
                 preferredSize: _tabBar.preferredSize,
                 child: Container(
-                  color: Colors.grey[800]!.withOpacity(0.5),
+                  color: Palette.getColor('secondary-background')!.withOpacity(0.5),
                   padding: const EdgeInsets.all(5),
                   child: _tabBar,
                 ),
@@ -106,8 +106,8 @@ class HomeScreen extends StatelessWidget {
       required String title,
       required Widget page}) {
     return ListTile(
-      focusColor: Colors.green[900],
-      iconColor: Colors.blue,
+      focusColor: Palette.getColor('secondary'),
+      iconColor: Palette.getColor('primary'),
       tileColor: Colors.transparent,
       titleTextStyle: const TextStyle(color: Colors.white),
       shape: const RoundedRectangleBorder(
@@ -142,7 +142,7 @@ class CustomTab extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Colors.blue,
+            color: Palette.getColor('primary'),
           ),
           const SizedBox(width: 10),
           Text(text),

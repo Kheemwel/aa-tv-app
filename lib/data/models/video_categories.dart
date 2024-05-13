@@ -1,3 +1,4 @@
+/// Model class for categoried of videos from back-end
 class VideoCategories {
   final int id;
   final String category;

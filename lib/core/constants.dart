@@ -14,3 +14,6 @@ const String urlEvents = 'https://android-tv-test.loca.lt/api/get-events';
 const String urlVideoCategories = 'https://android-tv-test.loca.lt/api/get-categories';
 
 const String urlVideos = 'https://android-tv-test.loca.lt/api/get-videos';
+
+/// URL for sending data to back-end
+const String urlSaveData = 'https://android-tv-test.loca.lt/api/save-data';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/data/network/send_data.dart';
 import 'package:flutter_android_tv_box/screens/games/color_game/color_cube.dart';
 
 class ColorGame extends StatefulWidget {
@@ -41,6 +42,12 @@ class _ColorGameState extends State<ColorGame> {
             ),
           ),
         );
+
+        if (colors[selectedIndex] == colorCube.selectedColor) {
+          SendData.sendGameResult(
+              gameName: 'Color Game',
+              description: 'They win by successfully getting the lucky color');
+        }
       },
     );
   }
@@ -60,15 +67,15 @@ class _ColorGameState extends State<ColorGame> {
         ),
         Expanded(
           child: SizedBox(
-              height: 340,
+            height: 340,
             width: 500,
             child: GridView.count(
-                padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
               crossAxisCount: 3,
-              children: List.generate(
-                  colors.length, (index) => _colorSelector(colors[index], index)),
+              children: List.generate(colors.length,
+                  (index) => _colorSelector(colors[index], index)),
             ),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+/// Model class for announcements from back-end
 class Announcements {
   final int id;
   final String title;

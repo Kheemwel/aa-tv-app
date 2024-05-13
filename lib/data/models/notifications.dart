@@ -1,3 +1,4 @@
+/// Model class for notifications in database
 class Notifications {
   final int id;
   final String title;

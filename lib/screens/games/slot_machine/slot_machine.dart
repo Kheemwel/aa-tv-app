@@ -123,6 +123,7 @@ class _SlotMachineState extends State<SlotMachine> {
           CarouselSlider(
             carouselController: controller,
             options: CarouselOptions(
+              scrollPhysics: const NeverScrollableScrollPhysics(),
               viewportFraction: 0.4,
               height: 200,
               scrollDirection: Axis.vertical,

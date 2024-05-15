@@ -27,6 +27,7 @@ class Palette {
 }
 
 final AppBarTheme appBarTheme = AppBarTheme(
+    centerTitle: true,
     titleSpacing: 50,
     iconTheme: IconThemeData(color: Palette.getColor('primary')),
     titleTextStyle: const TextStyle(color: Colors.white, fontSize: 26),
@@ -43,7 +44,8 @@ final TabBarTheme tabBarTheme = TabBarTheme(
   unselectedLabelColor: Colors.white,
   overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
     if (states.contains(MaterialState.focused)) {
-      return Palette.getColor('tertiary'); // Change background color when focused
+      return Palette.getColor(
+          'tertiary'); // Change background color when focused
     }
     return Colors.transparent;
   }),
@@ -52,8 +54,8 @@ final TabBarTheme tabBarTheme = TabBarTheme(
 final MenuThemeData menuThemeData = MenuThemeData(
     style: MenuStyle(
         surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
-        backgroundColor:
-            MaterialStateProperty.all(Palette.getColor('secondary-background'))));
+        backgroundColor: MaterialStateProperty.all(
+            Palette.getColor('secondary-background'))));
 
 final DialogTheme dialogTheme = DialogTheme(
     contentTextStyle: const TextStyle(fontSize: 18, color: Colors.white),

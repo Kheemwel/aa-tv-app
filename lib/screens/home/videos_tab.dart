@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/models/video_categories.dart';
@@ -13,7 +15,9 @@ class VideosTab extends StatefulWidget {
 
 class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
   late final TabController _tabController;
-  late List<VideoCategories> _categories = [];
+  static List<VideoCategories> _categories = [];
+  bool _isContentEmpty = false;
+  bool _noInternetConnection = false;
 
   @override
   void initState() {
@@ -27,6 +31,11 @@ class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
       final categories = await FetchData.getVideoCategories();
       setState(() {
         _categories = categories;
+        _isContentEmpty = _categories.isEmpty;
+      });
+    } on SocketException {
+      setState(() {
+        _noInternetConnection = true;
       });
     } catch (error) {
       rethrow;
@@ -41,30 +50,44 @@ class _VideosTabState extends State<VideosTab> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return _categories.isEmpty
-        ? const Center(child: CircularProgressIndicator())
-        : Column(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(5),
-                color: Palette.getColor('secondary-background').withOpacity(0.5),
-                child: TabBar.secondary(
-                    controller: _tabController,
-                    indicatorWeight: 0.01,
-                    tabs: List.generate(
-                      _categories.length,
-                      (index) => Tab(text: _categories[index].category),
-                    )),
-              ),
-              Expanded(
-                child: TabBarView(
-                    controller: _tabController,
-                    children: List.generate(
-                        _categories.length,
-                        (index) =>
-                            VideoPage(category: _categories[index].category))),
-              ),
-            ],
-          );
+    return _buildContent();
+  }
+
+  Widget _buildContent() {
+    if (_categories.isEmpty && _isContentEmpty) {
+      return const Text('No Content Available');
+    }
+
+    if (_categories.isNotEmpty) {
+      return Column(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.all(5),
+            color: Palette.getColor('secondary-background').withOpacity(0.5),
+            child: TabBar.secondary(
+                controller: _tabController,
+                indicatorWeight: 0.01,
+                tabs: List.generate(
+                  _categories.length,
+                  (index) => Tab(text: _categories[index].category),
+                )),
+          ),
+          Expanded(
+            child: TabBarView(
+                controller: _tabController,
+                children: List.generate(
+                    _categories.length,
+                    (index) =>
+                        VideoPage(category: _categories[index].category))),
+          ),
+        ],
+      );
+    }
+    
+    if (_noInternetConnection) {
+      return const Center(child: Text('No Internet Connection'));
+    }
+
+    return const Center(child: CircularProgressIndicator());
   }
 }

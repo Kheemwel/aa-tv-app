@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
               bottom: PreferredSize(
                 preferredSize: _tabBar.preferredSize,
                 child: Container(
-                  color: Palette.getColor('secondary-background')!.withOpacity(0.5),
+                  color: Palette.getColor('secondary-background').withOpacity(0.5),
                   padding: const EdgeInsets.all(5),
                   child: _tabBar,
                 ),

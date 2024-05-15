@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
 
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter_android_tv_box/data/models/videos.dart';
+
+// Package for caching image network
+import 'package:cached_network_image/cached_network_image.dart';
 
 class VideoPage extends StatefulWidget {
   final String category;
@@ -15,8 +21,9 @@ class VideoPage extends StatefulWidget {
 }
 
 class _VideoPageState extends State<VideoPage> {
-  late List<Videos> _videos = [];
+  static List<Videos> _videos = [];
   bool _isContentEmpty = false;
+  bool _noInternetConnection = false;
 
   @override
   void initState() {
@@ -33,6 +40,10 @@ class _VideoPageState extends State<VideoPage> {
             .toList();
         _isContentEmpty = _videos.isEmpty;
       });
+    } on SocketException {
+      setState(() {
+        _noInternetConnection = true;
+      });
     } catch (error) {
       rethrow;
     }
@@ -45,7 +56,7 @@ class _VideoPageState extends State<VideoPage> {
 
   Widget _content() {
     if (_videos.isEmpty && _isContentEmpty) {
-      return const Text('No Content');
+      return const Text('No Content Available');
     }
 
     if (_videos.isNotEmpty) {
@@ -59,7 +70,7 @@ class _VideoPageState extends State<VideoPage> {
               date: video.getFormattedDate(),
               description: video.description,
               thumbnail: video.thumbnailPath,
-              ontap: () => _viewVideo(context, video.videoPath),
+              onTap: () => _viewVideo(context, video.videoPath),
             );
           },
           separatorBuilder: (BuildContext context, int index) {
@@ -68,6 +79,10 @@ class _VideoPageState extends State<VideoPage> {
             );
           },
           itemCount: _videos.length);
+    }
+
+    if (_noInternetConnection) {
+      return const Text('No Internet Connection');
     }
 
     return const CircularProgressIndicator();
@@ -80,15 +95,26 @@ class _VideoPageState extends State<VideoPage> {
       ),
     );
 
+    // Show a loading dialog while the video initializes
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog.fullscreen(
+          child: Center(child: CircularProgressIndicator())),
+    );
+
     await videoController.initialize();
+
+    // Close the loading dialog after the video is initialized
+    Navigator.of(context).pop();
 
     final chewieController = ChewieController(
       videoPlayerController: videoController,
       autoPlay: true,
-      looping: true,
       materialProgressColors: ChewieProgressColors(
           playedColor: Colors.green,
           bufferedColor: Palette.getColor('secondary')),
+      allowFullScreen: true,
       fullScreenByDefault: true,
     );
 
@@ -108,7 +134,7 @@ class VideoTile extends StatefulWidget {
   final String date;
   final String description;
   final String thumbnail;
-  final VoidCallback ontap;
+  final VoidCallback onTap;
 
   const VideoTile({
     super.key,
@@ -116,7 +142,7 @@ class VideoTile extends StatefulWidget {
     required this.date,
     required this.description,
     required this.thumbnail,
-    required this.ontap,
+    required this.onTap,
   });
 
   @override
@@ -137,11 +163,23 @@ class _VideoTileState extends State<VideoTile> {
     return Focus(
       onFocusChange: (value) {
         setState(() {
-          backgroundColor = value ? Palette.getColor('secondary') : Palette.getColor('secondary-background');
+          backgroundColor = value
+              ? Palette.getColor('secondary')
+              : Palette.getColor('secondary-background');
         });
       },
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.select ||
+              event.logicalKey == LogicalKeyboardKey.enter) {
+            widget.onTap();
+            return KeyEventResult.handled;
+          }
+        }
+        return KeyEventResult.ignored;
+      },
       child: GestureDetector(
-        onTap: widget.ontap,
+        onTap: widget.onTap,
         child: Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
@@ -154,32 +192,23 @@ class _VideoTileState extends State<VideoTile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 400,
-                height: 300,
+                width: 512,
+                height: 288,
                 alignment: Alignment.center,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    widget.thumbnail,
-                    width: 400,
-                    height: 300,
-                    fit: BoxFit.cover,
-                    frameBuilder:
-                        (context, child, frame, wasSynchronouslyLoaded) {
-                      return child;
-                    },
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Placeholder();
-                    },
-                  ),
-                ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      width: 512,
+                      height: 288,
+                      fit: BoxFit.cover,
+                      imageUrl: widget.thumbnail,
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => const Padding(
+                        padding: EdgeInsets.all(2.5),
+                        child: Placeholder(),
+                      ),
+                    )),
               ),
               const SizedBox(
                 width: 50,

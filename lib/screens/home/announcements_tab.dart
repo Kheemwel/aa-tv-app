@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/models/announcements.dart';
 import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
@@ -11,8 +14,9 @@ class AnnouncementsTab extends StatefulWidget {
 }
 
 class _AnnouncementsTabState extends State<AnnouncementsTab> {
-  late List<Announcements> _announcements = [];
+  static List<Announcements> _announcements = [];
   bool _isContentEmpty = false;
+  bool _noInternetConnection = false;
 
   @override
   void initState() {
@@ -27,6 +31,10 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
         _announcements = announcements;
         _isContentEmpty = _announcements.isEmpty;
       });
+    } on SocketException {
+      setState(() {
+        _noInternetConnection = true;
+      });
     } catch (error) {
       rethrow;
     }
@@ -39,7 +47,7 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
 
   Widget _content() {
     if (_announcements.isEmpty && _isContentEmpty) {
-      return const Text('No Content');
+      return const Text('No Content Available');
     }
 
     if (_announcements.isNotEmpty) {
@@ -70,7 +78,8 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
                   ),
                   Text(
                     announcement.getFormattedDate(),
-                    style: TextStyle(color: Palette.getColor('text-dark'), fontSize: 12),
+                    style: TextStyle(
+                        color: Palette.getColor('text-dark'), fontSize: 12),
                   ),
                 ],
               ),
@@ -85,6 +94,10 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
         },
       );
     }
+    
+    if (_noInternetConnection) {
+      return const Text('No Internet Connection');
+    }
 
     return const CircularProgressIndicator();
   }
@@ -93,47 +106,74 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
     showDialog(
       context: context,
       builder: (context) => Dialog.fullscreen(
-        child: Row(
+          child: Container(
+        padding: const EdgeInsets.all(20),
+        color: Palette.getColor('primary-background'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Text(title, style: const TextStyle(fontSize: 20)),
             Expanded(
-                child: Container(
-              padding: const EdgeInsets.all(20),
-              color: Palette.getColor('primary-background'),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(title, style: const TextStyle(fontSize: 20)),
-                  Expanded(
-                    child: Center(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(
-                          message,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )),
-            SizedBox(
-                width: 100,
-                child: Center(
-                  child: TextButton(
-                    autofocus: true,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }, // Implement clear logic
-                    child: const Text(
-                      'Back',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
-                ))
+              child: Center(
+                  child: ScrollableText(
+                text: message,
+              )),
+            )
           ],
+        ),
+      )),
+    );
+  }
+}
+
+class ScrollableText extends StatefulWidget {
+  final String text;
+  const ScrollableText({super.key, required this.text});
+
+  @override
+  State<ScrollableText> createState() => _YourWidgetState();
+}
+
+class _YourWidgetState extends State<ScrollableText> {
+  final ScrollController _controller = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      autofocus: true,
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+          _controller.animateTo(
+            _controller.offset - 50.0, // Adjust scroll speed as needed
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.linear,
+          );
+          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+          _controller.animateTo(
+            _controller.offset + 50.0, // Adjust scroll speed as needed
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.linear,
+          );
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      child: SingleChildScrollView(
+        controller: _controller,
+        scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.all(10),
+        child: Text(
+          widget.text,
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

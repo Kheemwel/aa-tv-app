@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/models/events.dart';
@@ -11,8 +13,9 @@ class EventsTab extends StatefulWidget {
 }
 
 class _EventsTabState extends State<EventsTab> {
-  late List<Events> _events = [];
+  static List<Events> _events = [];
   bool _isContentEmpty = false;
+  bool _noInternetConnection = false;
 
   @override
   void initState() {
@@ -27,6 +30,10 @@ class _EventsTabState extends State<EventsTab> {
         _events = events;
         _isContentEmpty = _events.isEmpty;
       });
+    } on SocketException {
+      setState(() {
+        _noInternetConnection = true;
+      });
     } catch (error) {
       rethrow;
     }
@@ -39,7 +46,7 @@ class _EventsTabState extends State<EventsTab> {
 
   Widget _content() {
     if (_events.isEmpty && _isContentEmpty) {
-      return const Text('No Content');
+      return const Text('No Content Available');
     }
 
     if (_events.isNotEmpty) {
@@ -87,6 +94,10 @@ class _EventsTabState extends State<EventsTab> {
           );
         },
       );
+    }
+    
+    if (_noInternetConnection) {
+      return const Text('No Internet Connection');
     }
 
     return const CircularProgressIndicator();

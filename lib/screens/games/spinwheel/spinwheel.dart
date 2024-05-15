@@ -110,8 +110,7 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
                   alignment: Alignment
                       .topCenter, // <-- changing the position of the indicator
                   child: TriangleIndicator(
-                    color: Color(Palette.getColor('secondary')!
-                        .value), // <-- changing the color of the indicator
+                    color: Palette.getColor('secondary'), // <-- changing the color of the indicator
                     width: 40, // <-- changing the width of the indicator
                     height: 40, // <-- changing the height of the indicator
                     elevation: 0, // <-- changing the elevation of the indicator

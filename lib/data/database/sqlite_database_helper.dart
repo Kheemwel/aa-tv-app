@@ -14,7 +14,9 @@ class SQLiteDatabaseHelper {
   SQLiteDatabaseHelper._internal();
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
+    if (_database == null) {
+      await initDatabase();
+    }
     return _database!;
   }
 

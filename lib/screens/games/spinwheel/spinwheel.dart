@@ -3,8 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/data/models/notifications.dart';
 import 'package:flutter_android_tv_box/widgets/focus_border.dart';
-import 'package:flutter_android_tv_box/data/database/sqlite_notifications.dart';
+import 'package:flutter_android_tv_box/data/database/notifications_dao.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -55,16 +56,10 @@ class FortuneSpinWheel extends StatefulWidget {
 }
 
 class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
-  late SQLiteNotifications _sqLiteNotification;
+  late final NotificationsDAO _notificationsDAO = NotificationsDAO();
   final StreamController<int> _selected = StreamController<int>();
   int _selectedIndex = 0;
   static String _selectedItem = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _sqLiteNotification = SQLiteNotifications();
-  }
 
   Future<void> _handleSpin() async {
     try {
@@ -80,8 +75,10 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
       String dateTime = getCurrentDateTime();
       http.Response response =
           await saveGameData('Kim', _selectedItem, dateTime);
-      _sqLiteNotification.insertNotification('Congratulations! 🥳',
-          'You won $_selectedItem of internet speed.', dateTime);
+      _notificationsDAO.insertNotification(Notifications(
+          title: 'Congratulations! 🥳',
+          message: 'You won $_selectedItem of internet speed.',
+          datetime: dateTime));
 
       print('Game data saved successfully: ${response.body}');
     } catch (error) {
@@ -110,7 +107,8 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
                   alignment: Alignment
                       .topCenter, // <-- changing the position of the indicator
                   child: TriangleIndicator(
-                    color: Palette.getColor('secondary'), // <-- changing the color of the indicator
+                    color: Palette.getColor(
+                        'secondary'), // <-- changing the color of the indicator
                     width: 40, // <-- changing the width of the indicator
                     height: 40, // <-- changing the height of the indicator
                     elevation: 0, // <-- changing the elevation of the indicator
@@ -190,11 +188,5 @@ class _FortuneSpinWheelState extends State<FortuneSpinWheel> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _sqLiteNotification.dispose();
-    super.dispose();
   }
 }

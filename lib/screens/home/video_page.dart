@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
-import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
+import 'package:flutter_android_tv_box/data/database/videos_dao.dart';
 
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -21,19 +22,25 @@ class VideoPage extends StatefulWidget {
 }
 
 class _VideoPageState extends State<VideoPage> {
+  late final VideosDAO _videosDAO = VideosDAO();
   static List<Videos> _videos = [];
   bool _isContentEmpty = false;
   bool _noInternetConnection = false;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
-    _fetchVideoPage();
+    _fetchVideos();
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      VideosDAO.fetchVideos();
+      _fetchVideos();
+    });
   }
 
-  Future<void> _fetchVideoPage() async {
+  Future<void> _fetchVideos() async {
     try {
-      final videos = await FetchData.getVideos();
+      final videos = await _videosDAO.queryVideos(widget.category);
       setState(() {
         _videos = videos
             .where((element) => element.category == widget.category)
@@ -67,7 +74,7 @@ class _VideoPageState extends State<VideoPage> {
 
             return VideoTile(
               title: video.title,
-              date: video.getFormattedDate(),
+              date: video.createdAt,
               description: video.description,
               thumbnail: video.thumbnailPath,
               onTap: () => _viewVideo(context, video.videoPath),
@@ -89,43 +96,67 @@ class _VideoPageState extends State<VideoPage> {
   }
 
   void _viewVideo(BuildContext context, String videoLink) async {
-    final videoController = VideoPlayerController.networkUrl(
-      Uri.parse(
-        videoLink,
-      ),
-    );
+    late VideoPlayerController videoController;
+    try {
+      // Show a loading dialog while the video initializes
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Dialog.fullscreen(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
 
-    // Show a loading dialog while the video initializes
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Dialog.fullscreen(
-          child: Center(child: CircularProgressIndicator())),
-    );
+      videoController = VideoPlayerController.networkUrl(
+        Uri.parse(videoLink),
+      );
 
-    await videoController.initialize();
+      await videoController.initialize();
 
-    // Close the loading dialog after the video is initialized
-    Navigator.of(context).pop();
+      // Close the loading dialog after the video is initialized
+      Navigator.of(context).pop();
 
-    final chewieController = ChewieController(
-      videoPlayerController: videoController,
-      autoPlay: true,
-      materialProgressColors: ChewieProgressColors(
+      final chewieController = ChewieController(
+        videoPlayerController: videoController,
+        autoPlay: true,
+        materialProgressColors: ChewieProgressColors(
           playedColor: Colors.green,
-          bufferedColor: Palette.getColor('secondary')),
-      allowFullScreen: true,
-      fullScreenByDefault: true,
-    );
+          bufferedColor: Palette.getColor('secondary'),
+        ),
+        allowFullScreen: true,
+        fullScreenByDefault: true,
+      );
 
-    final playerWidget = Chewie(
-      controller: chewieController,
-    );
+      final playerWidget = Chewie(
+        controller: chewieController,
+      );
 
-    showDialog(
-      context: context,
-      builder: (context) => Dialog.fullscreen(child: playerWidget),
-    );
+      showDialog(
+        context: context,
+        builder: (context) => Dialog.fullscreen(child: playerWidget),
+      );
+    } catch (e) {
+      // Close the loading dialog if it's open
+      Navigator.of(context).pop();
+
+      // Show a dialog indicating that the video cannot be played
+      showDialog(
+        context: context,
+        builder: (context) => const Dialog.fullscreen(
+          child: Center(
+            child: Text("The Video Cannot Be Played"),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 }
 

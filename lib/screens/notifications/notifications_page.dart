@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
-import 'package:flutter_android_tv_box/data/database/sqlite_notifications.dart';
+import 'package:flutter_android_tv_box/data/database/notifications_dao.dart';
 import 'package:flutter_android_tv_box/data/models/notifications.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -11,20 +11,37 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationsPage> {
-  late SQLiteNotifications _sqLiteNotification;
+  late final NotificationsDAO _notificationsDAO = NotificationsDAO();
   late List<Notifications> _notifications = [];
+  bool _isContentEmpty = false;
 
   @override
   void initState() {
     super.initState();
-    _sqLiteNotification = SQLiteNotifications();
+    // List<Notifications> sample = List<Notifications>.generate(
+    //     10,
+    //     (index) => Notifications(
+    //         id: index,
+    //         title: 'Title $index',
+    //         message: 'Message $index',
+    //         datetime: DateTime.now().toIso8601String()));
+    // for (var element in sample) {
+    //   _notificationsDAO.insertNotification(element);
+    // }
+
+    // _notificationsDAO.updateNotification(Notifications(
+    //     id: 8,
+    //     title: "Updated",
+    //     message: 'Edited',
+    //     datetime: DateTime.now().toIso8601String()));
     _loadNotifications();
   }
 
   Future<void> _loadNotifications() async {
-    final notifications = await _sqLiteNotification.queryNotifications();
+    final notifications = await _notificationsDAO.queryNotifications();
     setState(() {
       _notifications = notifications.reversed.toList();
+      _isContentEmpty = _notifications.isEmpty;
     });
   }
 
@@ -50,33 +67,37 @@ class _NotificationPageState extends State<NotificationsPage> {
           ],
         ),
         body: Center(
-            child: _notifications.isNotEmpty
-                ? ListView.separated(
-                    // reverse: true,
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 25, horizontal: 50),
-                    itemCount: _notifications.length,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const SizedBox(
-                          height: 10,
-                        ),
-                    itemBuilder: (BuildContext context, int index) =>
-                        NotificationItem(
-                            notification: _notifications[index],
-                            onDelete: () =>
-                                _deleteNotification(_notifications[index].id)))
-                : const CircularProgressIndicator()));
+          child: _buildContent(),
+        ));
+  }
+
+  Widget _buildContent() {
+    if (_notifications.isEmpty && _isContentEmpty) {
+      return const Text('No New Notifications At The Moment');
+    }
+    if (_notifications.isNotEmpty) {
+      return ListView.separated(
+          // reverse: true,
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
+          itemCount: _notifications.length,
+          separatorBuilder: (BuildContext context, int index) => const SizedBox(
+                height: 10,
+              ),
+          itemBuilder: (BuildContext context, int index) => NotificationItem(
+              notification: _notifications[index],
+              onDelete: () => _deleteNotification(_notifications[index].id ?? -1)));
+    }
+    return const CircularProgressIndicator();
   }
 
   _deleteNotification(int id) {
-    _sqLiteNotification.deleteNotification(id);
+    _notificationsDAO.deleteNotification(id);
     _loadNotifications();
-    print(_notifications.length);
   }
 
   _clearNotification() {
-    _sqLiteNotification.clearNotifications();
+    _notificationsDAO.clearNotifications();
     _loadNotifications();
   }
 
@@ -114,12 +135,6 @@ class _NotificationPageState extends State<NotificationsPage> {
                 ),
               ],
             ));
-  }
-
-  @override
-  void dispose() {
-    _sqLiteNotification.dispose();
-    super.dispose();
   }
 }
 

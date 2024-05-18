@@ -42,25 +42,25 @@ class FetchData {
   static Future<List<Announcements>> getAnnouncements() async {
     return _fetchData<Announcements>(
         apiUrl: urlAnnouncements,
-        parser: (data) => Announcements.fromJson(data));
+        parser: (data) => Announcements.fromMap(data));
   }
 
   /// Fetch events from back-end
   static Future<List<Events>> getEvents() async {
     return _fetchData<Events>(
-        apiUrl: urlEvents, parser: (data) => Events.fromJson(data));
+        apiUrl: urlEvents, parser: (data) => Events.fromMap(data));
   }
 
   /// Fetch video categories from back-end
   static Future<List<VideoCategories>> getVideoCategories() async {
     return _fetchData<VideoCategories>(
         apiUrl: urlVideoCategories,
-        parser: (data) => VideoCategories.fromJson(data));
+        parser: (data) => VideoCategories.fromMap(data));
   }
 
   /// Fetch videos from back-end
   static Future<List<Videos>> getVideos() async {
     return _fetchData<Videos>(
-        apiUrl: urlVideos, parser: (data) => Videos.fromJson(data));
+        apiUrl: urlVideos, parser: (data) => Videos.fromMap(data));
   }
 }

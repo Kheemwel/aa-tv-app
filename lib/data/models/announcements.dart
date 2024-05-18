@@ -1,29 +1,40 @@
+import 'package:flutter_android_tv_box/data/models/model.dart';
 import 'package:intl/intl.dart';
 
 /// Model class for announcements from back-end
-class Announcements {
-  final int id;
+class Announcements extends Model {
+  final int? id;
   final String title;
   final String message;
-  final DateTime createdAt;
+  final String createdAt;
 
   Announcements({
-    required this.id,
+    this.id,
     required this.title,
     required this.message,
     required this.createdAt,
   });
 
-  factory Announcements.fromJson(Map<String, dynamic> json) {
+  factory Announcements.fromMap(Map<String, dynamic> map) {
     return Announcements(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      message: json['message'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
+      id: map['id'] as int,
+      title: map['title'] as String,
+      message: map['message'] as String,
+      createdAt: getFormattedDate(map['created_at']),
     );
   }
 
-  String getFormattedDate() {
-    return DateFormat('MMMM d, yyyy   hh:mm a').format(createdAt);
+  static String getFormattedDate(String dateTime) {
+    return DateFormat('MMMM d, yyyy   hh:mm a').format(DateTime.parse(dateTime));
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'message': message,
+      'created_at': createdAt
+    };
   }
 }

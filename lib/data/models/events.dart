@@ -1,35 +1,44 @@
+import 'package:flutter_android_tv_box/data/models/model.dart';
 import 'package:intl/intl.dart';
 
 /// Model class for events from back-end
-class Events {
-  final int id;
+class Events extends Model {
+  final int? id;
   final String title;
   final String description;
-  final DateTime eventStart;
-  final DateTime eventEnd;
+  final String eventStart;
+  final String eventEnd;
 
   Events(
-      {required this.id,
+      {this.id,
       required this.title,
       required this.description,
       required this.eventStart,
       required this.eventEnd});
 
-  factory Events.fromJson(Map<String, dynamic> json) {
+  factory Events.fromMap(Map<String, dynamic> map) {
     return Events(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      eventStart: DateTime.parse(json['event_start'] as String),
-      eventEnd: DateTime.parse(json['event_end'] as String),
+      id: map['id'] as int,
+      title: map['title'] as String,
+      description: map['description'] as String,
+      eventStart: getFormattedDate(map['event_start']),
+      eventEnd: getFormattedDate(map['event_end']),
     );
   }
 
-  String getEventStart() {
-    return DateFormat('MMMM d, yyyy (hh:mm a)').format(eventStart);
+  static String getFormattedDate(String dateTime) {
+    return DateFormat('MMMM d, yyyy   hh:mm a').format(DateTime.parse(dateTime));
   }
 
-  String getEventEnd() {
-    return DateFormat('MMMM d, yyyy (hh:mm a)').format(eventEnd);
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'event_start': eventStart,
+      'event_end': eventEnd,
+    };
   }
 }

@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/data/database/announcements_dao.dart';
+import 'package:flutter_android_tv_box/data/database/events_dao.dart';
 import 'package:flutter_android_tv_box/data/database/shared_preferences.dart';
+import 'package:flutter_android_tv_box/data/database/sqlite_database_helper.dart';
+import 'package:flutter_android_tv_box/data/database/video_categories_dao.dart';
+import 'package:flutter_android_tv_box/data/database/videos_dao.dart';
 import 'package:flutter_android_tv_box/screens/home/home_screen.dart';
 
 /// Main entry of the app
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //Initialize sqlite database
+  SQLiteDatabaseHelper().initDatabase();
+  VideoCategoriesDAO.fetchVideoCategories();
+  VideosDAO.fetchVideos();
+  AnnouncementsDAO.fetchAnnouncements();
+  EventsDAO.fetchEvents();
 
   // Initialize shared preferences
   SharedPref.init();

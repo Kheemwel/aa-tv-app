@@ -1,17 +1,27 @@
+import 'package:flutter_android_tv_box/data/models/model.dart';
+
 /// Model class for categoried of videos from back-end
-class VideoCategories {
-  final int id;
+class VideoCategories extends Model {
+  final int? id;
   final String category;
 
   VideoCategories({
-    required this.id,
+    this.id,
     required this.category,
   });
 
-  factory VideoCategories.fromJson(Map<String, dynamic> json) {
+  factory VideoCategories.fromMap(Map<String, dynamic> map) {
     return VideoCategories(
-      id: json['id'] as int,
-      category: json['category_name'] as String,
+      id: map['id'] as int,
+      category: map['category_name'] as String,
     );
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'category_name': category
+    };
   }
 }

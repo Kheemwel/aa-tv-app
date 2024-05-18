@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/data/database/events_dao.dart';
 import 'package:flutter_android_tv_box/data/models/events.dart';
-import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
 
 class EventsTab extends StatefulWidget {
   const EventsTab({super.key});
@@ -13,19 +14,26 @@ class EventsTab extends StatefulWidget {
 }
 
 class _EventsTabState extends State<EventsTab> {
+  late final EventsDAO _eventsDAO = EventsDAO();
   static List<Events> _events = [];
   bool _isContentEmpty = false;
   bool _noInternetConnection = false;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     _fetchEvents();
+    
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      EventsDAO.fetchEvents();
+      _fetchEvents();
+    });
   }
 
   Future<void> _fetchEvents() async {
     try {
-      final events = await FetchData.getEvents();
+      final events = await _eventsDAO.queryEvents();
       setState(() {
         _events = events;
         _isContentEmpty = _events.isEmpty;
@@ -76,11 +84,11 @@ class _EventsTabState extends State<EventsTab> {
                     style: const TextStyle(fontSize: 20),
                   ),
                   Text(
-                    'Start: ${announcement.getEventStart()}',
+                    'Start: ${announcement.eventStart}',
                     style: TextStyle(color: Palette.getColor('text-dark'), fontSize: 12),
                   ),
                   Text(
-                    'End: ${announcement.getEventEnd()}',
+                    'End: ${announcement.eventEnd}',
                     style: TextStyle(color: Palette.getColor('text-dark'), fontSize: 12),
                   ),
                 ],
@@ -101,5 +109,11 @@ class _EventsTabState extends State<EventsTab> {
     }
 
     return const CircularProgressIndicator();
+  }
+  
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 }

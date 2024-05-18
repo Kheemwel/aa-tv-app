@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
+import 'package:flutter_android_tv_box/data/database/announcements_dao.dart';
 import 'package:flutter_android_tv_box/data/models/announcements.dart';
-import 'package:flutter_android_tv_box/data/network/fetch_data.dart';
 
 class AnnouncementsTab extends StatefulWidget {
   const AnnouncementsTab({super.key});
@@ -14,19 +15,25 @@ class AnnouncementsTab extends StatefulWidget {
 }
 
 class _AnnouncementsTabState extends State<AnnouncementsTab> {
+  late final AnnouncementsDAO _announcementsDAO = AnnouncementsDAO();
   static List<Announcements> _announcements = [];
   bool _isContentEmpty = false;
   bool _noInternetConnection = false;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     _fetchAnnouncements();
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      AnnouncementsDAO.fetchAnnouncements();
+      _fetchAnnouncements();
+    });
   }
 
   Future<void> _fetchAnnouncements() async {
     try {
-      final announcements = await FetchData.getAnnouncements();
+      final announcements = await _announcementsDAO.queryAnnouncements();
       setState(() {
         _announcements = announcements;
         _isContentEmpty = _announcements.isEmpty;
@@ -77,7 +84,7 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
                     style: const TextStyle(fontSize: 20),
                   ),
                   Text(
-                    announcement.getFormattedDate(),
+                    announcement.createdAt,
                     style: TextStyle(
                         color: Palette.getColor('text-dark'), fontSize: 12),
                   ),
@@ -94,7 +101,7 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
         },
       );
     }
-    
+
     if (_noInternetConnection) {
       return const Text('No Internet Connection');
     }
@@ -124,6 +131,12 @@ class _AnnouncementsTabState extends State<AnnouncementsTab> {
         ),
       )),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 }
 

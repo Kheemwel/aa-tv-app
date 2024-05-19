@@ -66,6 +66,7 @@ final DrawerThemeData drawerThemeData = DrawerThemeData(
     backgroundColor: Palette.getColor('secondary-background'),
     surfaceTintColor: Colors.transparent);
 
+/// Overall theme of the app
 final ThemeData themeData = ThemeData(
   canvasColor: Palette.getColor('secondary-background'),
   textTheme: const TextTheme(

@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         LogicalKeySet(LogicalKeyboardKey.enter): const ActivateIntent(),
       },
       child: MaterialApp(
-          title: 'Flutter Demo',
+          title: 'AA TV',
           theme: themeData,
           home: const HomeScreen()),
     );

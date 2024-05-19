@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_android_tv_box/core/constants.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/database/videos_dao.dart';
 
@@ -71,13 +72,13 @@ class _VideoPageState extends State<VideoPage> {
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
           itemBuilder: (BuildContext context, int index) {
             final video = _videos[index];
-
+            
             return VideoTile(
               title: video.title,
               date: video.createdAt,
               description: video.description,
-              thumbnail: video.thumbnailPath,
-              onTap: () => _viewVideo(context, video.videoPath),
+              thumbnail: "$urlAPI/${video.thumbnailPath}/$imageToken",
+              onTap: () => _viewVideo(context, "$urlAPI/${video.videoPath}/$videoToken"),
             );
           },
           separatorBuilder: (BuildContext context, int index) {

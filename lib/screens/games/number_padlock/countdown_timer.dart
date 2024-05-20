@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+/// Utility class for countdown timer
 class CountDown {
   late Timer timer;
   int duration;
@@ -13,6 +14,7 @@ class CountDown {
     restart();
   }
 
+  /// Re-initialize the countdown timer
   void restart() {
     time = duration;
     timer = Timer.periodic(const Duration(seconds: 1), (count) async {
@@ -31,6 +33,7 @@ class CountDown {
     });
   }
 
+  /// Stop the countdown timer
   void cancel() {
     timer.cancel();
   }

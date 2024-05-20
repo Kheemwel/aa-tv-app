@@ -20,7 +20,8 @@ class _NumberPadlockState extends State<NumberPadlock> {
   final List<CarouselController> controllers =
       List.generate(4, (index) => CarouselController());
   String input = "????";
-  int timer = 60;
+  final int totalDuration = 60;
+  late int timer = totalDuration;
   late CountDown countDown;
 
   @override
@@ -45,8 +46,9 @@ class _NumberPadlockState extends State<NumberPadlock> {
                     ),
                   ),
                 );
-
-                SendData.sendGameResult(gameName: 'Number Padlock', description: 'They win the game in $timer seconds');
+                SendData.sendGameResult(
+                    gameName: 'Number Padlock',
+                    description: 'They win the game in $timer seconds');
               }
             }),
         onFinished: () {
@@ -76,9 +78,28 @@ class _NumberPadlockState extends State<NumberPadlock> {
         const SizedBox(
           height: 10,
         ),
-        Text('Countdown: ${timer.toString()}'),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Countdown: ${timer.toString()}',
+              style: const TextStyle(fontSize: 18),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 50),
+              child: LinearProgressIndicator(
+                value: timer / totalDuration,
+                backgroundColor: Palette.getColor('text-dark'),
+                color: Palette.getColor('tertiary'),
+                minHeight: 15,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+              ),
+            )
+          ],
+        ),
         const SizedBox(
-          height: 10,
+          height: 25,
         ),
         Text(
           'Password: $input',

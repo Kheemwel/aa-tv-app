@@ -54,14 +54,21 @@ class MemoryCard extends StatefulWidget {
 }
 
 class _MemoryCardState extends State<MemoryCard> {
+  bool isFocused = false;
   @override
   Widget build(BuildContext context) {
-    return FlipCard(
-      controller: widget._controller,
-      flipOnTouch: false,
-      front: Image.asset(defaultCard),
-      back: Image.asset(widget.content),
-      onFlipDone: (isFront) => widget.isFlipped = isFront,
+    return Focus(
+      descendantsAreFocusable: false,
+      onFocusChange:(value) => setState(() {
+        isFocused = value;
+      }),
+      child: FlipCard(
+        controller: widget._controller,
+        flipOnTouch: false,
+        front: Image.asset(defaultCard, scale: isFocused ? 0.5 : 1,),
+        back: Image.asset(widget.content, scale: isFocused ? 0.5 : 1,),
+        onFlipDone: (isFront) => widget.isFlipped = isFront,
+      ),
     );
   }
 }

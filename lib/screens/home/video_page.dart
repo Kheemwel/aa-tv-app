@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_android_tv_box/core/constants.dart';
 import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/database/videos_dao.dart';
+import 'package:flutter_android_tv_box/widgets/remote_controller.dart';
 
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -192,7 +192,7 @@ class _VideoTileState extends State<VideoTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
+    return buildRemoteController(
       onFocusChange: (value) {
         setState(() {
           backgroundColor = value
@@ -200,16 +200,7 @@ class _VideoTileState extends State<VideoTile> {
               : Palette.getColor('secondary-background');
         });
       },
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.select ||
-              event.logicalKey == LogicalKeyboardKey.enter) {
-            widget.onTap();
-            return KeyEventResult.handled;
-          }
-        }
-        return KeyEventResult.ignored;
-      },
+      onClick: widget.onTap,
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(

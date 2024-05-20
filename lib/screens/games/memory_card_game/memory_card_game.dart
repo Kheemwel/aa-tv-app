@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/data/network/send_data.dart';
 import 'package:flutter_android_tv_box/screens/games/memory_card_game/model.dart';
 import 'package:flutter_android_tv_box/widgets/focusable_elevated_button.dart';
+import 'package:flutter_android_tv_box/widgets/remote_controller.dart';
 
 class MemoryCardGame extends StatefulWidget {
   /// Memory card game screen
@@ -70,21 +71,31 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
         ),
         Expanded(
           child: SizedBox(
-            height: 350,
+            height: 400,
+            width: 860,
             child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 6,
-                  mainAxisExtent: 96,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  mainAxisExtent: 150,
                   crossAxisSpacing: 20,
-                  mainAxisSpacing: 20),
+                  mainAxisSpacing: 20,
+                  maxCrossAxisExtent: 100),
               itemCount: cards.length,
-              itemBuilder: (context, index) => GestureDetector(
-                  onTap: () => selectedCards.length == 2 ||
-                          selectedCards.contains(index) ||
-                          matchCards.contains(index)
-                      ? null
-                      : selectCard(index),
-                  child: cards[index]),
+              itemBuilder: (context, index) => buildRemoteController(
+                onClick: () {
+                  if (selectedCards.length < 2 &&
+                      !selectedCards.contains(index) &&
+                      !matchCards.contains(index)) {
+                    selectCard(index);
+                  }
+                },
+                child: GestureDetector(
+                    onTap: () => selectedCards.length == 2 ||
+                            selectedCards.contains(index) ||
+                            matchCards.contains(index)
+                        ? null
+                        : selectCard(index),
+                    child: cards[index]),
+              ),
             ),
           ),
         ),
@@ -157,7 +168,9 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
           ),
         );
 
-        SendData.sendGameResult(gameName: 'Memory Card Game', description: 'They finish the game in $time seconds');
+        SendData.sendGameResult(
+            gameName: 'Memory Card Game',
+            description: 'They finish the game in $time seconds');
       } else {
         selectedCards.clear();
       }

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/core/theme.dart';
 import 'package:flutter_android_tv_box/data/network/send_data.dart';
 import 'package:flutter_android_tv_box/screens/games/color_game/color_cube.dart';
+import 'package:flutter_android_tv_box/screens/games/color_game/color_game_model.dart';
+import 'package:flutter_android_tv_box/screens/games/color_game/fixed_sized_list.dart';
+import 'package:flutter_android_tv_box/widgets/focusable_elevated_button.dart';
 
+/// Main screen for color game
 class ColorGame extends StatefulWidget {
   const ColorGame({super.key});
 
@@ -10,24 +15,19 @@ class ColorGame extends StatefulWidget {
 }
 
 class _ColorGameState extends State<ColorGame> {
-  List<Color> colors = [
-    Colors.blue,
-    Colors.green,
-    Colors.orange,
-    Colors.purple,
-    Colors.pink,
-    Colors.indigo,
-  ];
-
-  int selectedIndex = -1;
-
   late ColorCube colorCube;
+  FixedSizeList<int> selectedColorIndexes = FixedSizeList(2);
+
+  bool get isWin {
+    return colorChoices[selectedColorIndexes.get(0)] ==
+            colorCube.selectedColor ||
+        colorChoices[selectedColorIndexes.get(1)] == colorCube.selectedColor;
+  }
 
   @override
   void initState() {
     super.initState();
     colorCube = ColorCube(
-      colors: colors,
       onEnd: () {
         showDialog(
           context: context,
@@ -36,14 +36,14 @@ class _ColorGameState extends State<ColorGame> {
               width: 100,
               height: 100,
               alignment: Alignment.center,
-              child: Text(colors[selectedIndex] == colorCube.selectedColor
+              child: Text(isWin
                   ? 'You Win'
                   : 'You Lose'),
             ),
           ),
         );
 
-        if (colors[selectedIndex] == colorCube.selectedColor) {
+        if (isWin) {
           SendData.sendGameResult(
               gameName: 'Color Game',
               description: 'They win by successfully getting the lucky color');
@@ -74,20 +74,20 @@ class _ColorGameState extends State<ColorGame> {
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
               crossAxisCount: 3,
-              children: List.generate(colors.length,
-                  (index) => _colorSelector(colors[index], index)),
+              children: List.generate(colorChoices.length,
+                  (index) => _colorSelector(colorChoices[index], index)),
             ),
           ),
         ),
         const SizedBox(
-          height: 25,
+          height: 15,
         ),
         Visibility(
-            visible: selectedIndex >= 0,
-            child: ElevatedButton(
-                onPressed: () => colorCube.start(), child: const Text('ROLL'))),
+            visible: selectedColorIndexes.isFull,
+            child: buildFocusableElevatedButton(
+                onPressed: () => colorCube.start(), text: 'ROLL')),
         const SizedBox(
-          height: 25,
+          height: 50,
         ),
       ],
     );
@@ -96,15 +96,24 @@ class _ColorGameState extends State<ColorGame> {
   Widget _colorSelector(Color color, int index) {
     return OutlinedButton(
       onPressed: () => setState(() {
-        selectedIndex = index;
+        selectedColorIndexes.add(index);
       }),
-      style: OutlinedButton.styleFrom(
-          minimumSize: const Size(100, 100),
-          backgroundColor: color,
-          shape: const BeveledRectangleBorder(),
-          side: BorderSide(width: selectedIndex == index ? 3 : 0.1)),
+      style: ButtonStyle(
+        minimumSize: MaterialStateProperty.all(const Size(100, 100)),
+        backgroundColor: MaterialStateProperty.all(color),
+        shape: MaterialStateProperty.all(const BeveledRectangleBorder()),
+        side: MaterialStateProperty.resolveWith<BorderSide?>((states) {
+          if (states.contains(MaterialState.focused)) {
+            return BorderSide(
+              color: Palette.getColor('tertiary'), // Border color when focused
+              width: 3.0, // Border width
+            );
+          }
+          return BorderSide(width: selectedColorIndexes.items.contains(index) ? 3 : 0.1);
+        }),
+      ),
       child: Text(
-        selectedIndex == index ? 'SELECTED' : '',
+        selectedColorIndexes.items.contains(index) ? 'SELECTED' : '',
         style: const TextStyle(color: Colors.black),
       ),
     );

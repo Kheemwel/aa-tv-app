@@ -1,32 +1,9 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/screens/games/memory_card_game/memory_card_game_model.dart';
 
-/// Image of the back part of the card
-const String defaultCard = 'assets/memory card game - back.png';
-
-/// List of all the images of the front part of cards
-const List<String> cards = [
-  'assets/memory card - diamond.png',
-  'assets/memory card - flower.png',
-  'assets/memory card - heart.png',
-  'assets/memory card - hourglass.png',
-];
-
-/// Duplicate the cards for matching and shuffle it
-List<String> multipliedCards() {
-  const multi = 3;
-  int multiplier = multi  * 2;
-  List<String> multiCards = [];
-  for (var card in cards) {
-    for (var i = 0; i < multiplier; i++) {
-      multiCards.add(card);
-    }
-  }
-
-  return multiCards..shuffle();
-}
-
+/// Widget for the memory card
 // ignore: must_be_immutable
 class MemoryCard extends StatefulWidget {
   /// Widget for the cards
@@ -58,7 +35,6 @@ class _MemoryCardState extends State<MemoryCard> {
   @override
   Widget build(BuildContext context) {
     return Focus(
-      descendantsAreFocusable: false,
       onFocusChange:(value) => setState(() {
         isFocused = value;
       }),

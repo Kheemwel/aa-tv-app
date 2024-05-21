@@ -1,16 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_android_tv_box/screens/games/color_game/color_game_model.dart';
 
+/// Widget of color cube
 // ignore: must_be_immutable
 class ColorCube extends StatefulWidget {
-  ColorCube(
-      {super.key,
-      required this.colors,
-      this.width = 100,
-      this.height = 100,
-      this.onEnd});
+  ColorCube({super.key, this.width = 100, this.height = 100, this.onEnd});
 
-  final List<Color> colors;
   final double width;
   final double height;
   late Color selectedColor;
@@ -24,55 +20,34 @@ class ColorCube extends StatefulWidget {
 class _ColorCubeState extends State<ColorCube>
     with SingleTickerProviderStateMixin {
   Random random = Random();
-  late Color currentColor;
-  static const Duration _duration = Duration(seconds: 5);
-  late final AnimationController controller;
+  late String currentFace = colorCubeFaces[0];
 
   @override
   void initState() {
     super.initState();
-    widget.selectedColor = widget.colors[0];
-    currentColor = widget.colors[0];
-    controller = AnimationController(
-      vsync: this,
-      duration: _duration,
-    );
-    controller.addListener(() {
+    widget.selectedColor = colorChoices[colorCubeColors[currentFace]!];
+    widget.start = () async {
+      for (var i = 0; i < random.nextInt(30) + 30; i++) {
+        setState(() {
+          currentFace = colorCubeFaces[random.nextInt(colorCubeFaces.length)];
+        });
+        await Future.delayed(Durations.short3);
+      }
       setState(() {
-        startColorChanging();
+        widget.selectedColor = colorChoices[colorCubeColors[currentFace]!];
       });
-    });
-
-    widget.start = () {
-      controller.reset();
-      controller.forward();
+      if (widget.onEnd != null) {
+        widget.onEnd!();
+      }
     };
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    controller.dispose();
-  }
-
-  void startColorChanging() {
-    currentColor = widget.colors[random.nextInt(widget.colors.length)];
-    if (controller.status == AnimationStatus.completed) {
-      widget.selectedColor = currentColor;
-      if (widget.onEnd != null) {
-        widget.onEnd!();
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: widget.width,
-        height: widget.height,
-        color: currentColor,
-      ),
+    return Image.asset(
+      currentFace,
+      width: 128,
+      height: 128,
     );
   }
 }

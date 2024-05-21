@@ -20,7 +20,7 @@ class _NumberPadlockState extends State<NumberPadlock> {
   final List<CarouselController> controllers =
       List.generate(4, (index) => CarouselController());
   String input = "????";
-  final int totalDuration = 60;
+  final int totalDuration = 60; // Total countdown duration
   late int timer = totalDuration;
   late CountDown countDown;
 

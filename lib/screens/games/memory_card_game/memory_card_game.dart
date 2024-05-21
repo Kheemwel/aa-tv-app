@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_android_tv_box/data/network/send_data.dart';
-import 'package:flutter_android_tv_box/screens/games/memory_card_game/model.dart';
+import 'package:flutter_android_tv_box/screens/games/memory_card_game/memory_card_game_model.dart';
+import 'package:flutter_android_tv_box/screens/games/memory_card_game/memoy_card.dart';
 import 'package:flutter_android_tv_box/widgets/focusable_elevated_button.dart';
 import 'package:flutter_android_tv_box/widgets/remote_controller.dart';
 
@@ -81,6 +82,7 @@ class _MemoryCardGameState extends State<MemoryCardGame> {
                   maxCrossAxisExtent: 100),
               itemCount: cards.length,
               itemBuilder: (context, index) => buildRemoteController(
+                canRequestFocus: false,
                 onClick: () {
                   if (selectedCards.length < 2 &&
                       !selectedCards.contains(index) &&

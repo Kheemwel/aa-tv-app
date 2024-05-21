@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 Widget buildRemoteController(
-    {void Function(bool value)? onFocusChange, required VoidCallback onClick, required Widget child}) {
+    {bool autoFocus = false, bool canRequestFocus = true, void Function(bool value)? onFocusChange, required VoidCallback onClick, required Widget child}) {
   return Focus(
-    canRequestFocus: false,
+    autofocus: autoFocus,
+    canRequestFocus: canRequestFocus,
     onFocusChange: (value) {
       if (onFocusChange != null) {
         onFocusChange(value);
